@@ -1,0 +1,93 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    font-family: 'Nunito', system-ui, sans-serif;
+  }
+  
+  body {
+    @apply text-gray-800 dark:text-gray-200 transition-colors duration-300;
+  }
+
+  /* New dynamic background: A subtle, animated gradient that gives the app
+    a calm, "breathing" feel.
+  */
+  .body-gradient {
+    @apply bg-gradient-to-br from-zen-50 via-calm-50 to-white;
+    background-size: 200% 200%;
+    animation: breathe 15s ease-in-out infinite;
+  }
+  
+  .dark .body-gradient {
+    @apply bg-gradient-to-br from-gray-900 via-calm-900/40 to-gray-800;
+    background-size: 200% 200%;
+    animation: breathe 15s ease-in-out infinite;
+  }
+}
+
+@layer components {
+  /*
+    Upgraded buttons with gradients and interactive hover effects.
+  */
+  .btn-primary {
+    @apply font-semibold py-2 px-5 rounded-lg transition-all duration-300
+           bg-gradient-to-r from-zen-500 to-zen-600 text-white
+           shadow-md hover:shadow-lg hover:-translate-y-0.5
+           focus:outline-none focus:ring-2 focus:ring-zen-400 focus:ring-offset-2
+           dark:focus:ring-offset-gray-900;
+  }
+  
+  .btn-secondary {
+    @apply font-semibold py-2 px-5 rounded-lg transition-all duration-300
+           bg-gray-200 hover:bg-gray-300
+           dark:bg-gray-700 dark:hover:bg-gray-600
+           text-gray-800 dark:text-gray-100
+           hover:shadow-md hover:-translate-y-0.5
+           focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-2
+           dark:focus:ring-offset-gray-900;
+  }
+  
+  /*
+    Upgraded cards with a subtle border and enhanced hover effect.
+  */
+  .card {
+    @apply bg-white/60 dark:bg-gray-800/60 backdrop-blur-sm
+           rounded-xl shadow-sm border border-gray-200/80 dark:border-gray-700/80
+           p-6 transition-all duration-300
+           hover:shadow-xl hover:border-zen-300 dark:hover:border-zen-600;
+  }
+  
+  /*
+    Upgraded input fields with a more prominent focus state.
+  */
+  .input-field {
+    @apply w-full px-4 py-2 border border-gray-300 dark:border-gray-600 
+           rounded-lg focus:outline-none focus:ring-2 focus:ring-zen-500 
+           bg-white/80 dark:bg-gray-700/80 
+           text-gray-900 dark:text-gray-100 
+           transition-all duration-200;
+  }
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  @apply bg-transparent;
+}
+::-webkit-scrollbar-thumb {
+  @apply bg-gray-300 dark:bg-gray-600 rounded-full border-2 border-transparent;
+}
+::-webkit-scrollbar-thumb:hover {
+  @apply bg-gray-400 dark:bg-gray-500;
+}
+
+/* Quill editor dark mode styles */
+.dark .ql-editor { @apply text-gray-100; }
+.dark .ql-toolbar { @apply border-gray-600; }
+.dark .ql-container { @apply border-gray-600; }
+.dark .ql-snow .ql-stroke { @apply stroke-gray-300; }
+.dark .ql-snow .ql-picker-label { @apply text-gray-300; }
