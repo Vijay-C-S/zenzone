@@ -1,58 +1,106 @@
-import React from 'react'
-import { Send, Bot, User, Loader2 } from 'lucide-react'
+import React, { useState, useEffect, useRef } from 'react'
 import toast from 'react-hot-toast'
+import './Chatbot.css'
+
+const CRISIS_KEYWORDS = [
+  'suicide', 'kill myself', 'end my life', 'want to die', 'better off dead',
+  'suicidal', 'hurt myself', 'self harm', 'no reason to live', 'hopeless'
+]
+
+const DISCLAIMER_TEXT = `⚠️ IMPORTANT DISCLAIMER:
+
+I am ZenBot, an AI-powered conversation companion - NOT a licensed mental health professional, therapist, or doctor.
+
+I CANNOT:
+❌ Diagnose mental health conditions
+❌ Prescribe medication or medical treatments
+❌ Replace professional mental health care
+❌ Provide emergency crisis intervention
+
+I CAN:
+✅ Offer supportive conversation and active listening
+✅ Share evidence-based coping strategies and mindfulness techniques
+✅ Provide psychoeducation about mental wellness concepts
+✅ Suggest lifestyle approaches that may support mental health
+
+🆘 CRISIS RESOURCES:
+If you're experiencing a mental health emergency or having thoughts of self-harm:
+• National Suicide Prevention Lifeline: 988 (US)
+• Crisis Text Line: Text HOME to 741741
+• International Association for Suicide Prevention: https://www.iasp.info/resources/Crisis_Centres/
+
+Please seek help from a qualified mental health professional for diagnosis, treatment, or medication management.`
 
 const Chatbot = () => {
-  const [messages, setMessages] = React.useState([
-    {
-      id: '1',
-      type: 'bot',
-      content: "Hello! I'm your wellness companion. I'm here to listen and provide support. How are you feeling today?",
-      timestamp: new Date().toISOString()
-    }
-  ])
-  const [inputMessage, setInputMessage] = React.useState('')
-  const [isLoading, setIsLoading] = React.useState(false)
-  const messagesEndRef = React.useRef(null)
-
-  const suggestedPrompts = [
-    "I'm feeling anxious about school",
-    "Can you help me with breathing exercises?",
-    "I'm having trouble sleeping",
-    "How can I manage stress better?",
-    "I feel overwhelmed today"
-  ]
-
-  React.useEffect(() => {
-    scrollToBottom()
-  }, [messages])
+  const [mode, setMode] = useState('share_thoughts')
+  const [message, setMessage] = useState('')
+  const [messages, setMessages] = useState([])
+  const [sessionId, setSessionId] = useState(null)
+  const [loading, setLoading] = useState(false)
+  const [showDisclaimer, setShowDisclaimer] = useState(true)
+  const [disclaimer, setDisclaimer] = useState(DISCLAIMER_TEXT)
+  const messagesEndRef = useRef(null)
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
   }
 
-  const sendMessage = async (content = inputMessage) => {
-    if (!content.trim()) return
+  useEffect(() => {
+    scrollToBottom()
+  }, [messages])
+
+  useEffect(() => {
+    // Fetch disclaimer from backend
+    const fetchDisclaimer = async () => {
+      try {
+        const response = await fetch('/api/chat/disclaimer')
+        if (response.ok) {
+          const data = await response.json()
+          setDisclaimer(data.disclaimer)
+        }
+      } catch (error) {
+        console.error('Error fetching disclaimer:', error)
+        // Use default disclaimer text
+      }
+    }
+    
+    fetchDisclaimer()
+  }, [])
+
+  const checkCrisisKeywords = (text) => {
+    const textLower = text.toLowerCase()
+    return CRISIS_KEYWORDS.some(keyword => textLower.includes(keyword))
+  }
+
+  const handleSendMessage = async (e) => {
+    e.preventDefault()
+    if (!message.trim()) return
 
     const userMessage = {
-      id: Date.now().toString(),
-      type: 'user',
-      content: content.trim(),
+      role: 'user',
+      content: message,
       timestamp: new Date().toISOString()
     }
 
     setMessages(prev => [...prev, userMessage])
-    setInputMessage('')
-    setIsLoading(true)
+    setMessage('')
+    setLoading(true)
 
     try {
+      // Check for crisis keywords
+      const isCrisis = checkCrisisKeywords(message)
+      
       const response = await fetch('/api/chat', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         credentials: 'include',
-        body: JSON.stringify({ message: content.trim() })
+        body: JSON.stringify({ 
+          message: message,
+          mode: mode,
+          session_id: sessionId
+        })
       })
 
       if (!response.ok) {
@@ -61,138 +109,145 @@ const Chatbot = () => {
 
       const data = await response.json()
 
-      const botMessage = {
-        id: (Date.now() + 1).toString(),
-        type: 'bot',
+      const assistantMessage = {
+        role: 'assistant',
         content: data.response,
-        timestamp: new Date().toISOString()
+        timestamp: new Date().toISOString(),
+        is_crisis: isCrisis || data.is_crisis
       }
 
-      setMessages(prev => [...prev, botMessage])
+      setMessages(prev => [...prev, assistantMessage])
+      
+      // Set session ID if not already set
+      if (!sessionId && data.session_id) {
+        setSessionId(data.session_id)
+      }
     } catch (error) {
       console.error('Chat error:', error)
       toast.error('Sorry, I\'m having trouble responding right now. Please try again.')
       
       const errorMessage = {
-        id: (Date.now() + 1).toString(),
-        type: 'bot',
+        role: 'assistant',
         content: "I apologize, but I'm experiencing some technical difficulties right now. Please try again in a moment. In the meantime, remember that it's okay to take things one step at a time.",
         timestamp: new Date().toISOString()
       }
       
       setMessages(prev => [...prev, errorMessage])
     } finally {
-      setIsLoading(false)
+      setLoading(false)
     }
   }
 
-  const handleSubmit = (e) => {
-    e.preventDefault()
-    sendMessage()
+  const handleModeChange = (newMode) => {
+    setMode(newMode)
   }
 
-  const handlePromptClick = (prompt) => {
-    sendMessage(prompt)
+  const getModeTitle = () => {
+    switch(mode) {
+      case 'share_thoughts':
+        return 'Share Your Thoughts'
+      case 'find_calm':
+        return 'Find Calm'
+      case 'just_chat':
+        return 'Just Chat'
+      default:
+        return 'ZenBot AI'
+    }
   }
 
   return (
-    <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
-          Wellness Companion
-        </h1>
-        <p className="text-gray-600 dark:text-gray-300">
-          Chat with our AI companion for emotional support and guidance.
-        </p>
-      </div>
-
-      <div className="card h-[600px] flex flex-col">
-        {/* Messages */}
-        <div className="flex-1 overflow-y-auto p-4 space-y-4">
-          {messages.map((message) => (
-            <div
-              key={message.id}
-              className={`flex ${message.type === 'user' ? 'justify-end' : 'justify-start'}`}
-            >
-              <div className={`flex items-start space-x-3 max-w-xs lg:max-w-md ${message.type === 'user' ? 'flex-row-reverse space-x-reverse' : ''}`}>
-                <div className={`flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center ${
-                  message.type === 'user' 
-                    ? 'bg-zen-600 text-white' 
-                    : 'bg-calm-100 dark:bg-calm-900 text-calm-600 dark:text-calm-400'
-                }`}>
-                  {message.type === 'user' ? (
-                    <User className="h-4 w-4" />
-                  ) : (
-                    <Bot className="h-4 w-4" />
-                  )}
-                </div>
-                <div className={`rounded-lg px-4 py-2 ${
-                  message.type === 'user'
-                    ? 'bg-zen-600 text-white'
-                    : 'bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-gray-100'
-                }`}>
-                  <p className="text-sm whitespace-pre-wrap">{message.content}</p>
-                </div>
-              </div>
-            </div>
-          ))}
-          
-          {isLoading && (
-            <div className="flex justify-start">
-              <div className="flex items-start space-x-3 max-w-xs lg:max-w-md">
-                <div className="flex-shrink-0 w-8 h-8 rounded-full bg-calm-100 dark:bg-calm-900 text-calm-600 dark:text-calm-400 flex items-center justify-center">
-                  <Bot className="h-4 w-4" />
-                </div>
-                <div className="bg-gray-100 dark:bg-gray-700 rounded-lg px-4 py-2">
-                  <div className="flex items-center space-x-2">
-                    <Loader2 className="h-4 w-4 animate-spin text-gray-500" />
-                    <span className="text-sm text-gray-500">Thinking...</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          )}
-          
-          <div ref={messagesEndRef} />
-        </div>
-
-        {/* Suggested Prompts */}
-        {messages.length === 1 && (
-          <div className="border-t border-gray-200 dark:border-gray-700 p-4">
-            <p className="text-sm text-gray-600 dark:text-gray-300 mb-3">
-              Try asking about:
-            </p>
-            <div className="flex flex-wrap gap-2">
-              {suggestedPrompts.map((prompt, index) => (
-                <button
-                  key={index}
-                  onClick={() => handlePromptClick(prompt)}
-                  className="text-sm bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300 px-3 py-1 rounded-full transition-colors duration-200"
-                >
-                  {prompt}
-                </button>
+    <div className="zenbot-app">
+      {showDisclaimer && (
+        <div className="disclaimer-modal">
+          <div className="disclaimer-content">
+            <h2>Welcome to ZenBot AI</h2>
+            <div className="disclaimer-text">
+              {disclaimer.split('\n').map((line, i) => (
+                <p key={i}>{line}</p>
               ))}
             </div>
+            <button 
+              className="accept-btn"
+              onClick={() => setShowDisclaimer(false)}
+            >
+              I Understand
+            </button>
           </div>
-        )}
+        </div>
+      )}
 
-        {/* Input */}
-        <div className="border-t border-gray-200 dark:border-gray-700 p-4">
-          <form onSubmit={handleSubmit} className="flex space-x-3">
+      <div className="zenbot-container">
+        <header className="zenbot-header">
+          <h1>🧘 ZenBot AI</h1>
+          <p className="zenbot-subtitle">{getModeTitle()}</p>
+        </header>
+
+        <div className="mode-selector">
+          <button
+            className={`mode-btn ${mode === 'share_thoughts' ? 'active' : ''}`}
+            onClick={() => handleModeChange('share_thoughts')}
+          >
+            <span>💭 Share Thoughts</span>
+          </button>
+          <button
+            className={`mode-btn ${mode === 'find_calm' ? 'active' : ''}`}
+            onClick={() => handleModeChange('find_calm')}
+          >
+            <span>🧘 Find Calm</span>
+          </button>
+          <button
+            className={`mode-btn ${mode === 'just_chat' ? 'active' : ''}`}
+            onClick={() => handleModeChange('just_chat')}
+          >
+            <span>💬 Just Chat</span>
+          </button>
+        </div>
+
+        <div className="zenbot-chat-container">
+          <div className="zenbot-messages">
+            {messages.length === 0 && (
+              <div className="welcome-message">
+                <h3>Welcome! How can I support you today?</h3>
+                <p>Feel free to share what's on your mind.</p>
+              </div>
+            )}
+            {messages.map((msg, index) => (
+              <div key={index} className={`zenbot-message ${msg.role}`}>
+                <div className="zenbot-message-content">
+                  {msg.content.split('\n').map((line, i) => (
+                    <p key={i}>{line}</p>
+                  ))}
+                </div>
+                {msg.is_crisis && (
+                  <div className="crisis-badge">Crisis Response</div>
+                )}
+              </div>
+            ))}
+            {loading && (
+              <div className="zenbot-message assistant loading">
+                <div className="zenbot-message-content">
+                  <p>Thinking...</p>
+                </div>
+              </div>
+            )}
+            <div ref={messagesEndRef} />
+          </div>
+
+          <form onSubmit={handleSendMessage} className="zenbot-input-form">
             <input
               type="text"
-              value={inputMessage}
-              onChange={(e) => setInputMessage(e.target.value)}
+              value={message}
+              onChange={(e) => setMessage(e.target.value)}
               placeholder="Type your message..."
-              className="flex-1 input-field"
-              disabled={isLoading}
+              disabled={loading}
+              className="zenbot-message-input"
             />
-            <button
-              type="submit"
-              disabled={isLoading || !inputMessage.trim()}
-              className="btn-primary px-4 disabled:opacity-50 disabled:cursor-not-allowed"
+            <button 
+              type="submit" 
+              disabled={loading || !message.trim()}
+              className="zenbot-send-btn"
             >
-              <Send className="h-5 w-5" />
+              Send
             </button>
           </form>
         </div>

@@ -85,6 +85,18 @@
   @apply bg-gray-400 dark:bg-gray-500;
 }
 
+/* Thin scrollbar utility classes */
+.scrollbar-thin::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+.scrollbar-thumb-gray-300::-webkit-scrollbar-thumb {
+  @apply bg-gray-300 rounded-full;
+}
+.scrollbar-thumb-gray-600::-webkit-scrollbar-thumb {
+  @apply bg-gray-600 rounded-full;
+}
+
 /* Quill editor dark mode styles */
 .dark .ql-editor { @apply text-gray-100; }
 .dark .ql-toolbar { @apply border-gray-600; }
