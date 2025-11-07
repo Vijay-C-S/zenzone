@@ -65,6 +65,9 @@ const allowedOrigins = [
   /^https:\/\/zenzone.*\.vercel\.app$/ // Allow all Vercel preview deployments
 ].filter(Boolean)
 
+console.log('🔒 CORS Configuration:')
+console.log('Allowed origins:', allowedOrigins.map(o => o instanceof RegExp ? o.toString() : o))
+
 app.use(cors({
   origin: (origin, callback) => {
     // Allow requests with no origin (mobile apps, Postman, etc.)
