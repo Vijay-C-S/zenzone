@@ -60,8 +60,9 @@ const allowedOrigins = [
   'http://localhost:5173',
   'http://localhost:3000',
   process.env.FRONTEND_URL,
+  'https://zenzone-git-master-vijay-cs-projects.vercel.app',
   'https://zenzone.vercel.app',
-  'https://zenzone-*.vercel.app' // Allow Vercel preview deployments
+  /^https:\/\/zenzone.*\.vercel\.app$/ // Allow all Vercel preview deployments
 ].filter(Boolean)
 
 app.use(cors({
@@ -71,10 +72,8 @@ app.use(cors({
     
     // Check if origin is allowed
     const isAllowed = allowedOrigins.some(allowed => {
-      if (allowed.includes('*')) {
-        // Handle wildcard domains like *.vercel.app
-        const pattern = allowed.replace('*', '.*')
-        return new RegExp(pattern).test(origin)
+      if (allowed instanceof RegExp) {
+        return allowed.test(origin)
       }
       return allowed === origin
     })
