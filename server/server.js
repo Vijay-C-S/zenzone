@@ -74,10 +74,23 @@ if (process.env.NODE_ENV !== 'production') {
   app.use(morgan('dev'))
 }
 
-// Connect to MongoDB
+// Connect to MongoDB (non-blocking)
 mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/zenzone')
 .then(() => console.log('Connected to MongoDB'))
 .catch(err => console.error('MongoDB connection error:', err))
+
+// Don't wait for MongoDB - start server immediately
+mongoose.connection.on('connected', () => {
+  console.log('Mongoose connected to MongoDB')
+})
+
+mongoose.connection.on('error', (err) => {
+  console.error('Mongoose connection error:', err)
+})
+
+mongoose.connection.on('disconnected', () => {
+  console.log('Mongoose disconnected')
+})
 
 // Routes
 app.use('/api/auth', authRoutes)
@@ -136,9 +149,15 @@ app.use('*', (req, res) => {
 // Start server - bind to 0.0.0.0 for Railway/Docker deployment
 const HOST = process.env.HOST || '0.0.0.0'
 const server = app.listen(PORT, HOST, () => {
-  console.log(`Server running on ${HOST}:${PORT}`)
-  console.log(`Environment: ${process.env.NODE_ENV || 'development'}`)
+  console.log(`✅ Server successfully started!`)
+  console.log(`🌐 Listening on ${HOST}:${PORT}`)
+  console.log(`📊 Environment: ${process.env.NODE_ENV || 'development'}`)
+  console.log(`🚀 ZenZone Backend API is ready!`)
 })
+
+// Keep the process alive
+server.keepAliveTimeout = 61 * 1000
+server.headersTimeout = 65 * 1000
 
 // Handle server errors
 server.on('error', (error) => {
