@@ -92,12 +92,30 @@ app.use('/api/habits', habitRoutes)
 app.use('/api/crisis', crisisRoutes)
 app.use('/api/notifications', notificationRoutes)
 
+// Root endpoint
+app.get('/', (req, res) => {
+  res.json({ 
+    message: 'ZenZone Backend API',
+    version: '1.0.0',
+    status: 'running',
+    endpoints: {
+      health: '/api/health',
+      auth: '/api/auth',
+      chat: '/api/chat',
+      mood: '/api/mood',
+      journal: '/api/journal',
+      wellness: '/api/wellness'
+    }
+  })
+})
+
 // Health check endpoint
 app.get('/api/health', (req, res) => {
   res.json({ 
     status: 'OK', 
     timestamp: new Date().toISOString(),
-    uptime: process.uptime()
+    uptime: process.uptime(),
+    mongodb: mongoose.connection.readyState === 1 ? 'connected' : 'disconnected'
   })
 })
 
@@ -117,9 +135,52 @@ app.use('*', (req, res) => {
 
 // Start server - bind to 0.0.0.0 for Railway/Docker deployment
 const HOST = process.env.HOST || '0.0.0.0'
-app.listen(PORT, HOST, () => {
+const server = app.listen(PORT, HOST, () => {
   console.log(`Server running on ${HOST}:${PORT}`)
   console.log(`Environment: ${process.env.NODE_ENV || 'development'}`)
+})
+
+// Handle server errors
+server.on('error', (error) => {
+  if (error.syscall !== 'listen') {
+    throw error
+  }
+
+  switch (error.code) {
+    case 'EACCES':
+      console.error(`Port ${PORT} requires elevated privileges`)
+      process.exit(1)
+      break
+    case 'EADDRINUSE':
+      console.error(`Port ${PORT} is already in use`)
+      process.exit(1)
+      break
+    default:
+      throw error
+  }
+})
+
+// Graceful shutdown
+process.on('SIGTERM', () => {
+  console.log('SIGTERM signal received: closing HTTP server')
+  server.close(() => {
+    console.log('HTTP server closed')
+    mongoose.connection.close(false, () => {
+      console.log('MongoDB connection closed')
+      process.exit(0)
+    })
+  })
+})
+
+process.on('SIGINT', () => {
+  console.log('SIGINT signal received: closing HTTP server')
+  server.close(() => {
+    console.log('HTTP server closed')
+    mongoose.connection.close(false, () => {
+      console.log('MongoDB connection closed')
+      process.exit(0)
+    })
+  })
 })
 
 export default app
