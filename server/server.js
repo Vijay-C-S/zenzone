@@ -55,12 +55,41 @@ const limiter = rateLimit({
 })
 app.use(limiter)
 
-// CORS configuration
+// CORS configuration - Allow Vercel deployments
+const allowedOrigins = [
+  'http://localhost:5173',
+  'http://localhost:3000',
+  process.env.FRONTEND_URL,
+  'https://zenzone.vercel.app',
+  'https://zenzone-*.vercel.app' // Allow Vercel preview deployments
+].filter(Boolean)
+
 app.use(cors({
-  origin: process.env.FRONTEND_URL || 'http://localhost:5173',
+  origin: (origin, callback) => {
+    // Allow requests with no origin (mobile apps, Postman, etc.)
+    if (!origin) return callback(null, true)
+    
+    // Check if origin is allowed
+    const isAllowed = allowedOrigins.some(allowed => {
+      if (allowed.includes('*')) {
+        // Handle wildcard domains like *.vercel.app
+        const pattern = allowed.replace('*', '.*')
+        return new RegExp(pattern).test(origin)
+      }
+      return allowed === origin
+    })
+    
+    if (isAllowed || process.env.NODE_ENV === 'development') {
+      callback(null, true)
+    } else {
+      console.log('CORS blocked origin:', origin)
+      callback(new Error('Not allowed by CORS'))
+    }
+  },
   credentials: true,
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization']
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
+  exposedHeaders: ['Set-Cookie']
 }))
 
 // Body parsing middleware
