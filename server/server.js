@@ -160,27 +160,6 @@ server.on('error', (error) => {
   }
 })
 
-// Graceful shutdown
-process.on('SIGTERM', () => {
-  console.log('SIGTERM signal received: closing HTTP server')
-  server.close(() => {
-    console.log('HTTP server closed')
-    mongoose.connection.close(false, () => {
-      console.log('MongoDB connection closed')
-      process.exit(0)
-    })
-  })
-})
-
-process.on('SIGINT', () => {
-  console.log('SIGINT signal received: closing HTTP server')
-  server.close(() => {
-    console.log('HTTP server closed')
-    mongoose.connection.close(false, () => {
-      console.log('MongoDB connection closed')
-      process.exit(0)
-    })
-  })
-})
+// Keep server running - Railway manages container lifecycle
 
 export default app
