@@ -199,6 +199,40 @@ const server = app.listen(PORT, HOST, () => {
 server.keepAliveTimeout = 61 * 1000
 server.headersTimeout = 65 * 1000
 
+// Heartbeat logging every 30s to confirm container stays up
+setInterval(() => {
+  console.log('💓 Heartbeat', {
+    uptime: Math.round(process.uptime()),
+    memoryMB: Math.round(process.memoryUsage().rss / 1024 / 1024),
+    mongoState: mongoose.connection.readyState
+  })
+}, 30 * 1000).unref()
+
+// Process lifecycle / crash diagnostics
+process.on('SIGTERM', () => {
+  console.log('⚠️ Received SIGTERM')
+})
+process.on('SIGINT', () => {
+  console.log('⚠️ Received SIGINT')
+})
+process.on('uncaughtException', (err) => {
+  console.error('💥 Uncaught Exception:', err)
+})
+process.on('unhandledRejection', (reason) => {
+  console.error('💥 Unhandled Rejection:', reason)
+})
+process.on('exit', (code) => {
+  console.log('👋 Process exiting with code', code)
+})
+
+// Debug endpoint to inspect CORS config at runtime
+app.get('/__debug/cors', (req, res) => {
+  res.json({
+    allowedOrigins: allowedOrigins.map(o => o instanceof RegExp ? o.toString() : o),
+    receivedOrigin: req.headers.origin || null
+  })
+})
+
 // Handle server errors
 server.on('error', (error) => {
   if (error.syscall !== 'listen') {

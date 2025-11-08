@@ -42,15 +42,14 @@ const generateToken = (userId) => {
 
 // Set token cookie
 const setTokenCookie = (res, token) => {
-  // For cross-site usage (frontend on vercel subdomain, backend on custom domain) we need SameSite=None and Secure
-  // Domain set to base domain so cookie is scoped correctly
+  // Remove explicit domain to let Node set host-only cookie (avoids mismatch issues during DNS/TLS propagation)
+  // SameSite=None + Secure required for cross-site usage; path '/' for all routes.
   res.cookie('token', token, {
     httpOnly: true,
-    secure: true, // production cross-site must be secure
-    sameSite: 'none', // allow cross-site cookie sending
-    domain: 'zenzone.com', // ensure cookie is attached only for backend domain
+    secure: true,
+    sameSite: 'none',
     path: '/',
-    maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
+    maxAge: 7 * 24 * 60 * 60 * 1000
   })
 }
 
