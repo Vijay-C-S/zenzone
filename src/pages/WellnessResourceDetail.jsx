@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import { ArrowLeft, Clock, User, Tag, BookOpen, Play, Headphones, Activity, Image, Wrench, FileCheck } from 'lucide-react'
+import API_BASE_URL from '../config/api'
 
 const WellnessResourceDetail = () => {
   const { id } = useParams()
@@ -14,7 +15,7 @@ const WellnessResourceDetail = () => {
       setError(null)
       try {
         console.log('Fetching resource with ID:', id)
-        const response = await fetch(`/api/wellness/${id}`)
+        const response = await fetch(`${API_BASE_URL}/api/wellness/${id}`)
         
         if (!response.ok) {
           throw new Error(`Failed to fetch resource. Status: ${response.status}`)

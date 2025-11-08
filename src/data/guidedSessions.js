@@ -1,4 +1,6 @@
 // Default guided meditation sessions data
+import API_BASE_URL from '../config/api'
+
 export const defaultGuidedSessions = [
   {
     title: "Mindful Breathing for Beginners",
@@ -581,7 +583,7 @@ Take this energy with you as you continue your day.`,
 // Function to initialize guided sessions (would be called from admin route)
 export const initializeGuidedSessions = async () => {
   try {
-    const response = await fetch('/api/meditation/guided/init', {
+    const response = await fetch(`${API_BASE_URL}/api/meditation/guided/init`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

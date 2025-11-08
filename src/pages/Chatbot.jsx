@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react'
 import toast from 'react-hot-toast'
 import './Chatbot.css'
+import API_BASE_URL from '../config/api'
 
 const CRISIS_KEYWORDS = [
   'suicide', 'kill myself', 'end my life', 'want to die', 'better off dead',
@@ -53,7 +54,7 @@ const Chatbot = () => {
     // Fetch disclaimer from backend
     const fetchDisclaimer = async () => {
       try {
-        const response = await fetch('/api/chat/disclaimer')
+        const response = await fetch(`${API_BASE_URL}/api/chat/disclaimer`)
         if (response.ok) {
           const data = await response.json()
           setDisclaimer(data.disclaimer)
@@ -90,7 +91,7 @@ const Chatbot = () => {
       // Check for crisis keywords
       const isCrisis = checkCrisisKeywords(message)
       
-      const response = await fetch('/api/chat', {
+      const response = await fetch(`${API_BASE_URL}/api/chat`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

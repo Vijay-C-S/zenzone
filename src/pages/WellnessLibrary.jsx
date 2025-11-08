@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { Search, Filter, BookOpen, Play, ExternalLink, Loader2, AlertTriangle } from 'lucide-react'
+import API_BASE_URL from '../config/api'
 
 const WellnessLibrary = () => {
   const [searchTerm, setSearchTerm] = useState('')
@@ -30,7 +31,7 @@ const WellnessLibrary = () => {
       if (selectedCategory !== 'all') params.append('category', selectedCategory)
 
       console.log('Fetching wellness resources from:', `/api/wellness?${params.toString()}`)
-      const response = await fetch(`/api/wellness?${params.toString()}`)
+      const response = await fetch(`${API_BASE_URL}/api/wellness?${params.toString()}`)
       
       if (!response.ok) {
         throw new Error(`Failed to fetch wellness resources. Status: ${response.status}`)

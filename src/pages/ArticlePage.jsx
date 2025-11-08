@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import { ArrowLeft, Loader2, AlertTriangle } from 'lucide-react'
+import API_BASE_URL from '../config/api'
 
 const ArticlePage = () => {
   const { id } = useParams()
@@ -12,7 +13,7 @@ const ArticlePage = () => {
     const fetchArticle = async () => {
       setIsLoading(true)
       try {
-        const response = await fetch(`/api/wellness/${id}`)
+        const response = await fetch(`${API_BASE_URL}/api/wellness/${id}`)
         if (!response.ok) {
           throw new Error('Article not found.')
         }

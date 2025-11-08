@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { Phone, MessageCircle, Globe, MapPin, Search, AlertTriangle, Heart, Clock } from 'lucide-react'
 import { useAuthStore } from '../stores/authStore'
 import toast from 'react-hot-toast'
+import API_BASE_URL from '../config/api'
 
 const CrisisSupport = () => {
   const [resources, setResources] = useState([])
@@ -18,7 +19,7 @@ const CrisisSupport = () => {
 
   const fetchEmergencyResources = async () => {
     try {
-      const response = await fetch('/api/crisis/emergency')
+      const response = await fetch(`${API_BASE_URL}/api/crisis/emergency`)
       const data = await response.json()
       setEmergencyResources(data.resources)
     } catch (error) {
@@ -31,7 +32,7 @@ const CrisisSupport = () => {
       const params = new URLSearchParams()
       if (selectedCategory !== 'all') params.append('category', selectedCategory)
       
-      const response = await fetch(`/api/crisis?${params}`)
+      const response = await fetch(`${API_BASE_URL}/api/crisis?${params}`)
       const data = await response.json()
       setResources(data.resources)
     } catch (error) {
@@ -48,7 +49,7 @@ const CrisisSupport = () => {
     }
 
     try {
-      const response = await fetch(`/api/crisis/search?q=${encodeURIComponent(searchTerm)}`)
+      const response = await fetch(`${API_BASE_URL}/api/crisis/search?q=${encodeURIComponent(searchTerm)}`)
       const data = await response.json()
       setResources(data.resources)
     } catch (error) {
@@ -61,7 +62,7 @@ const CrisisSupport = () => {
     if (!token) return
 
     try {
-      await fetch('/api/crisis/log', {
+      await fetch(`${API_BASE_URL}/api/crisis/log`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

@@ -25,7 +25,7 @@ const MoodTracker = () => {
   const fetchMoodEntries = async () => {
     setIsLoading(true)
     try {
-      const response = await fetch('/api/mood', {
+      const response = await fetch(`${API_BASE_URL}/api/mood`, {
         credentials: 'include'
       })
       if (response.ok) {
@@ -56,7 +56,7 @@ const MoodTracker = () => {
   const saveMoodEntry = async (moodValue, note = '') => {
     setIsLoading(true)
     try {
-      const response = await fetch('/api/mood', {
+      const response = await fetch(`${API_BASE_URL}/api/mood`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
