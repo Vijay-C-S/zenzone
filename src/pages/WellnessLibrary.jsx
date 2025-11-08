@@ -9,7 +9,9 @@ const WellnessLibrary = () => {
   const [resources, setResources] = useState([])
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState(null)
-  const [pagination, setPagination] = useState({ page: 1, pages: 1 })
+  const [currentPage, setCurrentPage] = useState(1)
+  const [totalPages, setTotalPages] = useState(1)
+  const [total, setTotal] = useState(0)
 
   const categories = [
     { value: 'all', label: 'All Resources' },
@@ -26,7 +28,8 @@ const WellnessLibrary = () => {
     setError(null)
     try {
       const params = new URLSearchParams()
-      params.append('page', pagination.page)
+      params.append('page', currentPage)
+      params.append('limit', 12)
       if (searchTerm) params.append('search', searchTerm)
       if (selectedCategory !== 'all') params.append('category', selectedCategory)
 
@@ -40,7 +43,8 @@ const WellnessLibrary = () => {
       const data = await response.json()
       console.log('Received data:', data)
       setResources(data.resources || [])
-      setPagination(data.pagination || { currentPage: 1, totalPages: 1, total: 0 })
+      setTotalPages(data.totalPages || 1)
+      setTotal(data.total || 0)
     } catch (err) {
       console.error('Fetch error:', err)
       setError(err.message)
@@ -67,16 +71,16 @@ const WellnessLibrary = () => {
     }, 500)
 
     return () => clearTimeout(timer)
-  }, [searchTerm, selectedCategory, pagination.page])
+  }, [searchTerm, selectedCategory, currentPage])
 
   const handleCategoryChange = (e) => {
     setSelectedCategory(e.target.value)
-    setPagination(prev => ({ ...prev, page: 1 }))
+    setCurrentPage(1)
   }
 
   const handlePageChange = (newPage) => {
-    if (newPage > 0 && newPage <= pagination.pages) {
-      setPagination(prev => ({ ...prev, page: newPage }))
+    if (newPage > 0 && newPage <= totalPages) {
+      setCurrentPage(newPage)
     }
   }
 
