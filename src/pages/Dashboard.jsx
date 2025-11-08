@@ -4,6 +4,7 @@ import { Heart, BookOpen, MessageCircle, ClipboardList, TrendingUp, Calendar } f
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts'
 import { format, subDays } from 'date-fns'
 import toast from 'react-hot-toast'
+import API_BASE_URL from '../config/api'
 
 const Dashboard = () => {
   const [quote, setQuote] = React.useState('')
@@ -45,7 +46,7 @@ const Dashboard = () => {
     try {
       // Fetch last 7 days of mood data
       const startDate = subDays(new Date(), 6)
-      const response = await fetch(`/api/mood?startDate=${startDate.toISOString()}&limit=30`, {
+      const response = await fetch(`${API_BASE_URL}/api/mood?startDate=${startDate.toISOString()}&limit=30`, {
         credentials: 'include'
       })
 
@@ -84,7 +85,7 @@ const Dashboard = () => {
       const activities = []
       
       // Fetch recent mood entries
-      const moodResponse = await fetch('/api/mood?limit=3', {
+      const moodResponse = await fetch(`${API_BASE_URL}/api/mood?limit=3`, {
         credentials: 'include'
       })
       if (moodResponse.ok) {
@@ -102,7 +103,7 @@ const Dashboard = () => {
       }
 
       // Fetch recent journal entries
-      const journalResponse = await fetch('/api/journal?limit=3', {
+      const journalResponse = await fetch(`${API_BASE_URL}/api/journal?limit=3`, {
         credentials: 'include'
       })
       if (journalResponse.ok) {

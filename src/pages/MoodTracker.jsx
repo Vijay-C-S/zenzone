@@ -2,6 +2,7 @@ import React from 'react'
 import { Calendar, TrendingUp, Smile, Meh, Frown } from 'lucide-react'
 import { format, startOfMonth, endOfMonth, eachDayOfInterval, isSameDay, isToday, isFuture, startOfDay } from 'date-fns'
 import toast from 'react-hot-toast'
+import API_BASE_URL from '../config/api'
 
 const MoodTracker = () => {
   const [selectedDate, setSelectedDate] = React.useState(new Date())

@@ -4,6 +4,7 @@ import { format } from 'date-fns'
 import ReactQuill from 'react-quill'
 import 'react-quill/dist/quill.snow.css'
 import toast from 'react-hot-toast'
+import API_BASE_URL from '../config/api'
 
 const Journal = () => {
   const [entries, setEntries] = React.useState([])
@@ -24,7 +25,7 @@ const Journal = () => {
   const fetchJournalEntries = async () => {
     setIsLoading(true)
     try {
-      const response = await fetch('/api/journal', {
+      const response = await fetch(`${API_BASE_URL}/api/journal`, {
         credentials: 'include'
       })
       if (response.ok) {
@@ -50,7 +51,7 @@ const Journal = () => {
 
     setIsLoading(true)
     try {
-      const response = await fetch('/api/journal', {
+      const response = await fetch(`${API_BASE_URL}/api/journal`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -86,7 +87,7 @@ const Journal = () => {
   const handleUpdateEntry = async (updatedEntry) => {
     setIsLoading(true)
     try {
-      const response = await fetch(`/api/journal/${updatedEntry._id}`, {
+      const response = await fetch(`${API_BASE_URL}/api/journal/${updatedEntry._id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json'
@@ -126,7 +127,7 @@ const Journal = () => {
 
     setIsLoading(true)
     try {
-      const response = await fetch(`/api/journal/${entryId}`, {
+      const response = await fetch(`${API_BASE_URL}/api/journal/${entryId}`, {
         method: 'DELETE',
         credentials: 'include'
       })
