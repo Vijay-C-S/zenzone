@@ -56,10 +56,11 @@ const limiter = rateLimit({
 app.use(limiter)
 
 // CORS configuration - Allow Vercel deployments
+// Normalize any env values with trailing slashes to avoid exact-match issues
 const allowedOrigins = [
   'http://localhost:5173',
   'http://localhost:3000',
-  process.env.FRONTEND_URL,
+  process.env.FRONTEND_URL ? process.env.FRONTEND_URL.replace(/\/$/, '') : null,
   'https://zenzone-git-master-vijay-cs-projects.vercel.app',
   'https://zenzone.vercel.app',
   /^https:\/\/zenzone.*\.vercel\.app$/ // Allow all Vercel preview deployments
@@ -70,28 +71,32 @@ console.log('Allowed origins:', allowedOrigins.map(o => o instanceof RegExp ? o.
 
 app.use(cors({
   origin: (origin, callback) => {
-    // Allow requests with no origin (mobile apps, Postman, etc.)
-    if (!origin) return callback(null, true)
-    
-    // Check if origin is allowed
+    // Allow requests with no origin (mobile apps, Postman, server-to-server)
+    if (!origin) {
+      console.log('CORS: request with no origin allowed')
+      return callback(null, true)
+    }
+
+    const normalizedOrigin = origin.replace(/\/$/, '')
     const isAllowed = allowedOrigins.some(allowed => {
-      if (allowed instanceof RegExp) {
-        return allowed.test(origin)
-      }
-      return allowed === origin
+      if (allowed instanceof RegExp) return allowed.test(normalizedOrigin)
+      return allowed === normalizedOrigin
     })
-    
+
     if (isAllowed || process.env.NODE_ENV === 'development') {
-      callback(null, true)
+      console.log('CORS: allowed origin ->', origin)
+      callback(null, true) // reflect the request origin
     } else {
-      console.log('CORS blocked origin:', origin)
+      console.log('CORS: blocked origin ->', origin)
       callback(new Error('Not allowed by CORS'))
     }
   },
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
   allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
-  exposedHeaders: ['Set-Cookie']
+  exposedHeaders: ['Set-Cookie'],
+  preflightContinue: false,
+  optionsSuccessStatus: 204
 }))
 
 // Body parsing middleware
