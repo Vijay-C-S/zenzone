@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { Plus, Calendar, TrendingUp, CheckCircle, Clock, Flame, Edit, Trash2, Eye, Activity } from 'lucide-react'
 import { useAuthStore } from '../stores/authStore'
 import toast from 'react-hot-toast'
+import API_BASE_URL from '../config/api'
 
 const Habits = () => {
   const [habits, setHabits] = useState([])
@@ -29,7 +30,7 @@ const Habits = () => {
 
   const fetchHabits = async () => {
     try {
-      const response = await fetch('http://localhost:3001/api/habits', {
+      const response = await fetch(`${API_BASE_URL}/api/habits`, {
         credentials: 'include'
       })
       const data = await response.json()
@@ -48,7 +49,7 @@ const Habits = () => {
     try {
       const startDate = selectedDate
       const endDate = selectedDate
-      const response = await fetch(`/api/habits/entries?startDate=${startDate}&endDate=${endDate}`, {
+      const response = await fetch(`${API_BASE_URL}/api/habits/entries?startDate=${startDate}&endDate=${endDate}`, {
         credentials: 'include'
       })
       const data = await response.json()
@@ -60,7 +61,7 @@ const Habits = () => {
 
   const fetchStats = async () => {
     try {
-      const response = await fetch('http://localhost:3001/api/habits/stats', {
+      const response = await fetch(`${API_BASE_URL}/api/habits/stats`, {
         credentials: 'include'
       })
       const data = await response.json()
@@ -72,7 +73,7 @@ const Habits = () => {
 
   const toggleHabitCompletion = async (habitId, completed, count = 1) => {
     try {
-      const response = await fetch('http://localhost:3001/api/habits/entries', {
+      const response = await fetch(`${API_BASE_URL}/api/habits/entries`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -100,7 +101,7 @@ const Habits = () => {
 
   const deleteHabit = async (habitId) => {
     try {
-      const response = await fetch(`http://localhost:3001/api/habits/${habitId}`, {
+      const response = await fetch(`${API_BASE_URL}/api/habits/${habitId}`, {
         method: 'DELETE',
         credentials: 'include'
       })
@@ -123,7 +124,7 @@ const Habits = () => {
 
   const toggleHabitStatus = async (habitId, isActive) => {
     try {
-      const response = await fetch(`http://localhost:3001/api/habits/${habitId}`, {
+      const response = await fetch(`${API_BASE_URL}/api/habits/${habitId}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -672,7 +673,7 @@ const CreateHabitModal = ({ onClose, onSuccess }) => {
     setLoading(true)
 
     try {
-      const response = await fetch('http://localhost:3001/api/habits', {
+      const response = await fetch(`${API_BASE_URL}/api/habits`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -906,7 +907,7 @@ const EditHabitModal = ({ habit, onClose, onSuccess }) => {
     setLoading(true)
 
     try {
-      const response = await fetch(`http://localhost:3001/api/habits/${habit._id}`, {
+      const response = await fetch(`${API_BASE_URL}/api/habits/${habit._id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

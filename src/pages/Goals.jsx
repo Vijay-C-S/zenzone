@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { Plus, Target, Calendar, CheckCircle, Clock, Filter, TrendingUp, Play, Pause, RotateCcw, Star, Trophy, Zap } from 'lucide-react'
 import { useAuthStore } from '../stores/authStore'
 import toast from 'react-hot-toast'
+import API_BASE_URL from '../config/api'
 
 const Goals = () => {
   const [goals, setGoals] = useState([])
@@ -18,7 +19,7 @@ const Goals = () => {
 
   const fetchGoals = async () => {
     try {
-      const response = await fetch(`/api/goals?status=${activeTab}`, {
+      const response = await fetch(`${API_BASE_URL}/api/goals?status=${activeTab}`, {
         credentials: 'include'
       })
       const data = await response.json()
@@ -33,7 +34,7 @@ const Goals = () => {
 
   const fetchStats = async () => {
     try {
-      const response = await fetch('/api/goals/stats', {
+      const response = await fetch(`${API_BASE_URL}/api/goals/stats`, {
         credentials: 'include'
       })
       const data = await response.json()
@@ -98,7 +99,7 @@ const Goals = () => {
 
   const toggleMilestone = async (goalId, milestoneId, completed) => {
     try {
-      const response = await fetch(`/api/goals/${goalId}/milestones/${milestoneId}`, {
+      const response = await fetch(`${API_BASE_URL}/api/goals/${goalId}/milestones/${milestoneId}`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
@@ -498,7 +499,7 @@ const CreateGoalModal = ({ onClose, onSuccess }) => {
     setLoading(true)
 
     try {
-      const response = await fetch('/api/goals', {
+      const response = await fetch(`${API_BASE_URL}/api/goals`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

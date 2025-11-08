@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react'
 import { Play, Pause, RotateCcw, Clock, Heart, Brain, Moon, Focus, Smile } from 'lucide-react'
 import { useAuthStore } from '../stores/authStore'
 import toast from 'react-hot-toast'
+import API_BASE_URL from '../config/api'
 
 // Enhanced guided sessions data with detailed content and scripts
 const guidedSessionsData = [
@@ -240,7 +241,7 @@ const Meditation = () => {
 
   const fetchMeditationHistory = async () => {
     try {
-      const response = await fetch('http://localhost:3001/api/meditation/history', {
+      const response = await fetch(`${API_BASE_URL}/api/meditation/history`, {
         credentials: 'include'
       })
       const data = await response.json()
@@ -252,7 +253,7 @@ const Meditation = () => {
 
   const fetchStats = async () => {
     try {
-      const response = await fetch('http://localhost:3001/api/meditation/stats', {
+      const response = await fetch(`${API_BASE_URL}/api/meditation/stats`, {
         credentials: 'include'
       })
       const data = await response.json()
@@ -434,7 +435,7 @@ const MeditationTimer = ({ onSessionComplete }) => {
 
   const startTimer = async () => {
     try {
-      const response = await fetch('http://localhost:3001/api/meditation/session', {
+      const response = await fetch(`${API_BASE_URL}/api/meditation/session`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -474,7 +475,7 @@ const MeditationTimer = ({ onSessionComplete }) => {
 
     try {
       const completedDuration = Math.round((duration * 60 - timeLeft) / 60)
-      await fetch(`http://localhost:3001/api/meditation/session/${sessionId}/complete`, {
+      await fetch(`${API_BASE_URL}/api/meditation/session/${sessionId}/complete`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json'
@@ -850,7 +851,7 @@ const GuidedSessionPlayer = ({ session, onComplete, onBack }) => {
     
     // Try to create session in backend, but continue even if it fails
     try {
-      const response = await fetch('http://localhost:3001/api/meditation/session', {
+      const response = await fetch(`${API_BASE_URL}/api/meditation/session`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -891,7 +892,7 @@ const GuidedSessionPlayer = ({ session, onComplete, onBack }) => {
     if (sessionId) {
       try {
         const completedDuration = Math.round((session.duration * 60 - timeLeft) / 60)
-        const response = await fetch(`http://localhost:3001/api/meditation/session/${sessionId}/complete`, {
+        const response = await fetch(`${API_BASE_URL}/api/meditation/session/${sessionId}/complete`, {
           method: 'PATCH',
           headers: {
             'Content-Type': 'application/json'
