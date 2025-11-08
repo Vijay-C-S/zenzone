@@ -40,6 +40,8 @@ const allowedOrigins = [
   process.env.FRONTEND_URL ? process.env.FRONTEND_URL.replace(/\/$/, '') : null,
   'https://zenzone-git-master-vijay-cs-projects.vercel.app',
   'https://zenzone.vercel.app',
+  // Allow any Railway app domain (fallback while custom domain DNS propagates)
+  /^https?:\/\/.*\.up\.railway\.app$/,
   /^https:\/\/zenzone.*\.vercel\.app$/ // Allow all Vercel preview deployments
 ].filter(Boolean)
 
