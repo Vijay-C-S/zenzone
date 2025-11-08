@@ -29,6 +29,54 @@ dotenv.config()
 const app = express()
 const PORT = process.env.PORT || 3001
 
+// CORS must be applied early, before other middleware
+// (helmet, rate limiting, body parsing, routes, etc.)
+// Build CORS options once to reuse for preflight handler
+// CORS configuration - Allow Vercel deployments
+// Normalize any env values with trailing slashes to avoid exact-match issues
+const allowedOrigins = [
+  'http://localhost:5173',
+  'http://localhost:3000',
+  process.env.FRONTEND_URL ? process.env.FRONTEND_URL.replace(/\/$/, '') : null,
+  'https://zenzone-git-master-vijay-cs-projects.vercel.app',
+  'https://zenzone.vercel.app',
+  /^https:\/\/zenzone.*\.vercel\.app$/ // Allow all Vercel preview deployments
+].filter(Boolean)
+
+console.log('🔒 CORS Configuration:')
+console.log('Allowed origins:', allowedOrigins.map(o => o instanceof RegExp ? o.toString() : o))
+
+const corsOptions = {
+  origin: (origin, callback) => {
+    if (!origin) {
+      console.log('CORS: request with no origin allowed')
+      return callback(null, true)
+    }
+    const normalizedOrigin = origin.replace(/\/$/, '')
+    const isAllowed = allowedOrigins.some(allowed => {
+      if (allowed instanceof RegExp) return allowed.test(normalizedOrigin)
+      return allowed === normalizedOrigin
+    })
+    if (isAllowed || process.env.NODE_ENV === 'development') {
+      console.log('CORS: allowed origin ->', origin)
+      callback(null, true)
+    } else {
+      console.log('CORS: blocked origin ->', origin)
+      callback(new Error('Not allowed by CORS'))
+    }
+  },
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
+  exposedHeaders: ['Set-Cookie'],
+  preflightContinue: false,
+  optionsSuccessStatus: 204
+}
+
+app.use(cors(corsOptions))
+// Handle preflight across the board
+app.options('*', cors(corsOptions))
+
 // Security middleware
 app.use(helmet({
   contentSecurityPolicy: {
@@ -54,50 +102,6 @@ const limiter = rateLimit({
   legacyHeaders: false, // Disable the `X-RateLimit-*` headers
 })
 app.use(limiter)
-
-// CORS configuration - Allow Vercel deployments
-// Normalize any env values with trailing slashes to avoid exact-match issues
-const allowedOrigins = [
-  'http://localhost:5173',
-  'http://localhost:3000',
-  process.env.FRONTEND_URL ? process.env.FRONTEND_URL.replace(/\/$/, '') : null,
-  'https://zenzone-git-master-vijay-cs-projects.vercel.app',
-  'https://zenzone.vercel.app',
-  /^https:\/\/zenzone.*\.vercel\.app$/ // Allow all Vercel preview deployments
-].filter(Boolean)
-
-console.log('🔒 CORS Configuration:')
-console.log('Allowed origins:', allowedOrigins.map(o => o instanceof RegExp ? o.toString() : o))
-
-app.use(cors({
-  origin: (origin, callback) => {
-    // Allow requests with no origin (mobile apps, Postman, server-to-server)
-    if (!origin) {
-      console.log('CORS: request with no origin allowed')
-      return callback(null, true)
-    }
-
-    const normalizedOrigin = origin.replace(/\/$/, '')
-    const isAllowed = allowedOrigins.some(allowed => {
-      if (allowed instanceof RegExp) return allowed.test(normalizedOrigin)
-      return allowed === normalizedOrigin
-    })
-
-    if (isAllowed || process.env.NODE_ENV === 'development') {
-      console.log('CORS: allowed origin ->', origin)
-      callback(null, true) // reflect the request origin
-    } else {
-      console.log('CORS: blocked origin ->', origin)
-      callback(new Error('Not allowed by CORS'))
-    }
-  },
-  credentials: true,
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
-  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
-  exposedHeaders: ['Set-Cookie'],
-  preflightContinue: false,
-  optionsSuccessStatus: 204
-}))
 
 // Body parsing middleware
 app.use(express.json({ limit: '10mb' }))
