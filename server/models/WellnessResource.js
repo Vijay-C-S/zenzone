@@ -14,7 +14,7 @@ const wellnessResourceSchema = new mongoose.Schema({
   },
   content: {
     type: String,
-    maxlength: 10000
+    maxlength: 100000
   },
   type: {
     type: String,
@@ -24,7 +24,7 @@ const wellnessResourceSchema = new mongoose.Schema({
   category: {
     type: String,
     required: true,
-    enum: ['anxiety', 'depression', 'stress', 'mindfulness', 'sleep', 'relationships', 'general']
+    enum: ['anxiety', 'depression', 'stress', 'mindfulness', 'sleep', 'relationships', 'general', 'nutrition']
   },
   url: {
     type: String,
