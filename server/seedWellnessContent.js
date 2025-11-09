@@ -8,27 +8,27 @@ const wellnessResources = [
   {
     title: "Self-Compassion and Inner Kindness",
     description: "Learn to treat yourself with the same kindness you'd offer a good friend. Building resilience and emotional wellbeing through self-compassion practices.",
-    content: "# Self-Compassion and Inner Kindness\n\nSelf-compassion is the practice of treating yourself with the same kindness, concern, and understanding you would offer to a good friend. Research shows that self-compassion is strongly associated with emotional wellbeing, less anxiety and depression, and greater life satisfaction.\n\n## The Three Elements of Self-Compassion\n\n### 1. Self-Kindness vs. Self-Judgment\nBeing warm and understanding toward ourselves when we suffer, fail, or feel inadequate, rather than ignoring our pain or flagellating ourselves with self-criticism.\n\n### 2. Common Humanity vs. Isolation  \nRecognizing that suffering and personal inadequacy are part of the shared human experience – something we all go through rather than something that happens to 'me' alone.\n\n### 3. Mindfulness vs. Over-Identification\nTaking a balanced approach to negative emotions so that feelings are neither suppressed nor exaggerated.",
+    content: "# Self-Compassion and Inner Kindness\n\nSelf-compassion is the practice of treating yourself with the same kindness, concern, and understanding you would offer to a good friend. Research by Dr. Kristin Neff shows that self-compassion is strongly associated with emotional wellbeing, less anxiety and depression, and greater life satisfaction.\n\n## The Three Elements of Self-Compassion\n\n### 1. Self-Kindness vs. Self-Judgment\nBeing warm and understanding toward ourselves when we suffer, fail, or feel inadequate, rather than ignoring our pain or flagellating ourselves with self-criticism. When you make a mistake, speak to yourself as you would to a dear friend.\n\n### 2. Common Humanity vs. Isolation  \nRecognizing that suffering and personal inadequacy are part of the shared human experience – something we all go through rather than something that happens to 'me' alone. You are not the only one struggling; imperfection is part of being human.\n\n### 3. Mindfulness vs. Over-Identification\nTaking a balanced approach to negative emotions so that feelings are neither suppressed nor exaggerated. Observe your thoughts and feelings without judgment.\n\n## Practical Self-Compassion Exercises\n\n**The Self-Compassion Break (5 minutes)**\n1. Think of a situation causing you stress\n2. Say: 'This is a moment of suffering'\n3. Remind yourself: 'Suffering is part of life'\n4. Place hand on heart and say: 'May I be kind to myself'\n\n**Loving-Kindness Meditation**\n- Begin with yourself: 'May I be happy, may I be healthy, may I be safe'\n- Extend to loved ones, acquaintances, and all beings\n\n**Self-Compassionate Letter Writing**\n- Write a letter to yourself from the perspective of an unconditionally loving friend\n- Acknowledge your pain without judgment\n- Remind yourself of your shared humanity\n\n## Building Your Practice\n\nStart with just 5 minutes daily. Notice your self-talk throughout the day and gently redirect harsh thoughts toward kindness. Remember: self-compassion isn't self-indulgence or self-pity – it's a powerful tool for resilience, growth, and genuine self-improvement.",
     category: "mindfulness",
     type: "article",
     duration: "15 min read",
     difficulty: "beginner",
     tags: ["self-compassion", "mindfulness", "emotional-wellbeing", "meditation"],
     author: "Dr. Sarah Johnson",
-    imageUrl: "/images/self-compassion.jpg",
+    imageUrl: "https://images.unsplash.com/photo-1499209974431-9dddcece7f88?w=800&h=400&fit=crop",
     isPublished: true
   },
   {
     title: "Nature Connection for Mental Health",
     description: "Discover how spending time in nature can significantly improve your mental health. Simple ways to incorporate outdoor activities into your daily routine.",
-    content: "# Nature Connection for Mental Health\n\nScientific research increasingly shows that spending time in nature has profound effects on our mental health and overall wellbeing. From reducing stress and anxiety to improving mood and cognitive function, nature offers a powerful therapeutic tool.\n\n## The Science Behind Nature Therapy\n\nStudies show that just 20 minutes in nature can lower stress hormone levels. Forest bathing (Shinrin-yoku) has been shown to reduce cortisol levels by 12.4%, lower blood pressure, improve immune function, and reduce symptoms of depression and anxiety.\n\n## Simple Ways to Connect with Nature\n\n- Morning walks in local parks\n- Lunch breaks outdoors\n- Indoor plants and window gardens\n- Hiking local trails\n- Beach or lake visits\n- Gardening or community gardens",
+    content: "# Nature Connection for Mental Health\n\nScientific research increasingly shows that spending time in nature has profound effects on our mental health and overall wellbeing. From reducing stress and anxiety to improving mood and cognitive function, nature offers a powerful therapeutic tool.\n\n## The Science Behind Nature Therapy\n\nStudies show that just 20 minutes in nature can lower stress hormone levels. Forest bathing (Shinrin-yoku), a Japanese practice of immersing yourself in nature, has been shown to:\n- Reduce cortisol levels by 12.4%\n- Lower blood pressure and heart rate\n- Boost immune system function\n- Reduce symptoms of depression and anxiety\n- Enhance creativity and problem-solving abilities\n\n## Benefits of Nature Exposure\n\n**Mental Health Benefits:**\n- Reduced rumination and negative thought patterns\n- Improved attention and focus\n- Enhanced mood and emotional regulation\n- Decreased symptoms of ADHD\n- Better sleep quality\n\n**Physical Health Benefits:**\n- Strengthened immune system\n- Reduced inflammation\n- Lower blood pressure\n- Improved cardiovascular health\n\n## Simple Ways to Connect with Nature\n\n### Urban Nature Connection (Daily)\n- Morning walks in local parks\n- Lunch breaks outdoors\n- Indoor plants and window gardens\n- Mindful observation of trees, birds, clouds\n- Open window for fresh air and natural sounds\n\n### Weekend Nature Activities\n- Hiking local trails\n- Beach or lake visits\n- Forest walks or forest bathing\n- Gardening or community gardens\n- Nature photography\n- Outdoor yoga or meditation\n\n## The 20-Minute Nature Prescription\n\nResearch shows that 20 minutes in nature, 3 times per week, significantly improves mental health:\n\n1. **Choose a natural setting** - park, garden, beach, forest\n2. **Leave devices behind** - be fully present\n3. **Engage your senses** - notice sights, sounds, smells, textures\n4. **Move gently** - walk slowly, sit, or do gentle stretching\n5. **Practice gratitude** - appreciate the natural beauty around you\n\n## Mindful Nature Practice (10 minutes)\n\n1. Find a quiet spot outdoors\n2. Sit or stand comfortably\n3. Take 5 deep breaths\n4. Open your awareness:\n   - Notice 5 things you can see\n   - Listen for 4 different sounds\n   - Feel 3 different textures\n   - Notice 2 scents in the air\n   - Take 1 deep breath of gratitude\n\n## Making It a Habit\n\n**Morning Routine:**\n- Start your day with 5 minutes outdoors\n- Morning sunlight helps regulate circadian rhythm\n- Sets a calm, grounded tone for the day\n\n**Work Breaks:**\n- Take walking meetings outside\n- Eat lunch in a park or garden\n- 5-minute nature breaks every 2 hours\n\n**Evening Wind-Down:**\n- Evening walks to decompress\n- Stargazing or sunset watching\n- Outdoor meditation or stretching\n\n## Indoor Nature Connection\n\nEven indoor nature exposure provides benefits:\n- Keep houseplants (snake plant, pothos, peace lily)\n- Display nature photography or art\n- Use natural materials (wood, stone, plants)\n- Open windows for natural light and air\n- Listen to nature sounds\n- View nature through windows\n\nRemember: Even small doses of nature contact improve wellbeing. Start with what's accessible to you and build from there.",
     category: "general",
     type: "article",
     duration: "12 min read",
     difficulty: "beginner",
-    tags: ["nature", "stress-relief", "outdoor-activities", "mindfulness"],
+    tags: ["nature", "stress-relief", "outdoor-activities", "mindfulness", "forest-bathing"],
     author: "Michael Green",
-    imageUrl: "/images/nature-therapy.jpg",
+    imageUrl: "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=800&h=400&fit=crop",
     isPublished: true
   },
   {
@@ -41,7 +41,7 @@ const wellnessResources = [
     difficulty: "beginner",
     tags: ["stress-management", "anxiety-relief", "daily-routine", "wellness"],
     author: "Dr. Lisa Martinez",
-    imageUrl: "/images/stress-management.jpg",
+    imageUrl: "https://images.unsplash.com/photo-1506126613408-eca07ce68773?w=800&h=400&fit=crop",
     isPublished: true
   },
   {
@@ -54,7 +54,7 @@ const wellnessResources = [
     difficulty: "intermediate",
     tags: ["mindful-eating", "nutrition", "mental-health", "wellness"],
     author: "Nutritionist Emma Williams",
-    imageUrl: "/images/mindful-eating.jpg",
+    imageUrl: "https://images.unsplash.com/photo-1490645935967-10de6ba17061?w=800&h=400&fit=crop",
     isPublished: true
   },
   {
@@ -67,7 +67,7 @@ const wellnessResources = [
     difficulty: "intermediate",
     tags: ["boundaries", "relationships", "self-care", "communication"],
     author: "Dr. James Chen",
-    imageUrl: "/images/boundaries.jpg",
+    imageUrl: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=800&h=400&fit=crop",
     isPublished: true
   },
   {
@@ -80,7 +80,7 @@ const wellnessResources = [
     difficulty: "beginner",
     tags: ["breathing", "anxiety", "panic-attacks", "stress-relief", "mindfulness"],
     author: "Yoga Therapist Rachel Adams",
-    imageUrl: "/images/breathing.jpg",
+    imageUrl: "https://images.unsplash.com/photo-1506126613408-eca07ce68773?w=800&h=400&fit=crop",
     isPublished: true
   },
   {
@@ -93,7 +93,7 @@ const wellnessResources = [
     difficulty: "intermediate",
     tags: ["digital-detox", "technology", "social-media", "mindfulness", "productivity"],
     author: "Tech Wellness Coach David Park",
-    imageUrl: "/images/digital-detox.jpg",
+    imageUrl: "https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?w=800&h=400&fit=crop",
     isPublished: true
   },
   {
@@ -106,7 +106,7 @@ const wellnessResources = [
     difficulty: "beginner",
     tags: ["guided-meditation", "stress-relief", "mindfulness", "relaxation", "breathing"],
     author: "Meditation Teacher Maya Singh",
-    imageUrl: "/images/guided-meditation.jpg",
+    imageUrl: "https://images.unsplash.com/photo-1528715471579-d1bcf0ba5e83?w=800&h=400&fit=crop",
     url: "https://example.com/meditation-audio",
     isPublished: true
   },
@@ -120,7 +120,7 @@ const wellnessResources = [
     difficulty: "intermediate",
     tags: ["work-life-balance", "burnout-prevention", "boundaries", "career", "wellbeing"],
     author: "Career Coach Jennifer Liu",
-    imageUrl: "/images/work-life-balance.jpg",
+    imageUrl: "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=800&h=400&fit=crop",
     isPublished: true
   },
   {
@@ -133,7 +133,7 @@ const wellnessResources = [
     difficulty: "intermediate",
     tags: ["depression", "mental-health", "self-care", "coping-strategies", "wellbeing"],
     author: "Clinical Psychologist Dr. Amanda Foster",
-    imageUrl: "/images/depression-care.jpg",
+    imageUrl: "https://images.unsplash.com/photo-1506126613408-eca07ce68773?w=800&h=400&fit=crop",
     isPublished: true
   }
 ]
