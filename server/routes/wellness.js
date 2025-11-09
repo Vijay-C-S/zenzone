@@ -601,25 +601,8 @@ router.put('/:id', authenticate, resourceValidation, async (req, res) => {
   }
 })
 
-// Delete wellness resource (admin only)
-router.delete('/:id', authenticate, async (req, res) => {
-  try {
-    const resource = await WellnessResource.findByIdAndDelete(req.params.id)
-    
-    if (!resource) {
-      return res.status(404).json({ message: 'Resource not found' })
-    }
-
-    res.json({ message: 'Resource deleted successfully' })
-  } catch (error) {
-    console.error('Error deleting wellness resource:', error)
-    res.status(500).json({ message: 'Failed to delete wellness resource' })
-  }
-})
-
-export default router
-
-// Quick seed endpoint (remove after seeding production)
+// Quick seed endpoints (place before /:id route to avoid conflicts)
+// Seed database with wellness resources
 router.post('/seed', async (req, res) => {
   try {
     const count = await WellnessResource.countDocuments()
@@ -793,3 +776,21 @@ router.delete('/seed', async (req, res) => {
     res.status(500).json({ error: error.message })
   }
 })
+
+// Delete wellness resource by ID (admin only)
+router.delete('/:id', authenticate, async (req, res) => {
+  try {
+    const resource = await WellnessResource.findByIdAndDelete(req.params.id)
+    
+    if (!resource) {
+      return res.status(404).json({ message: 'Resource not found' })
+    }
+
+    res.json({ message: 'Resource deleted successfully' })
+  } catch (error) {
+    console.error('Error deleting wellness resource:', error)
+    res.status(500).json({ message: 'Failed to delete wellness resource' })
+  }
+})
+
+export default router
