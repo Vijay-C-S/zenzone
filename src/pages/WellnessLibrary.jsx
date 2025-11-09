@@ -225,11 +225,11 @@ const WellnessLibrary = () => {
       )}
 
       {/* Pagination */}
-      {!isLoading && resources.length > 0 && pagination.totalPages > 1 && (
+      {!isLoading && resources.length > 0 && totalPages > 1 && (
         <div className="flex items-center justify-between">
           <button
-            onClick={() => handlePageChange(pagination.currentPage - 1)}
-            disabled={pagination.currentPage <= 1}
+            onClick={() => handlePageChange(currentPage - 1)}
+            disabled={currentPage <= 1}
             className="px-4 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-lg
                      hover:bg-gray-50 hover:text-gray-700 disabled:opacity-50 disabled:cursor-not-allowed
                      dark:bg-gray-800 dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-700"
@@ -239,13 +239,13 @@ const WellnessLibrary = () => {
           
           <div className="flex items-center space-x-2">
             <span className="text-sm text-gray-700 dark:text-gray-300">
-              Page {pagination.currentPage} of {pagination.totalPages}
+              Page {currentPage} of {totalPages}
             </span>
           </div>
           
           <button
-            onClick={() => handlePageChange(pagination.currentPage + 1)}
-            disabled={pagination.currentPage >= pagination.totalPages}
+            onClick={() => handlePageChange(currentPage + 1)}
+            disabled={currentPage >= totalPages}
             className="px-4 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-lg
                      hover:bg-gray-50 hover:text-gray-700 disabled:opacity-50 disabled:cursor-not-allowed
                      dark:bg-gray-800 dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-700"

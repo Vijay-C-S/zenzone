@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Seed Production Database</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #1a1a2e;
+            color: #eee;
+        }
+        h1 {
+            color: #4ade80;
+        }
+        button {
+            background: #4ade80;
+            color: #1a1a2e;
+            border: none;
+            padding: 15px 30px;
+            font-size: 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            margin: 10px 5px;
+            font-weight: bold;
+        }
+        button:hover {
+            background: #22c55e;
+        }
+        button.danger {
+            background: #ef4444;
+            color: white;
+        }
+        button.danger:hover {
+            background: #dc2626;
+        }
+        #result {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 8px;
+            background: #2a2a3e;
+            white-space: pre-wrap;
+            font-family: monospace;
+        }
+        .success {
+            border-left: 4px solid #4ade80;
+        }
+        .error {
+            border-left: 4px solid #ef4444;
+        }
+        .info {
+            background: #3b82f6;
+            color: white;
+            padding: 10px;
+            border-radius: 4px;
+            margin: 15px 0;
+        }
+    </style>
+</head>
+<body>
+    <h1>🌱 Seed Production Database</h1>
+    
+    <div class="info">
+        <strong>Railway Backend:</strong> https://zenzone-production-2f90.up.railway.app
+    </div>
+
+    <p>This will populate your production MongoDB database with 10 wellness resources.</p>
+
+    <button onclick="seedDatabase()">🚀 Seed Database</button>
+    <button onclick="checkResources()">📊 Check Resources</button>
+    <button class="danger" onclick="clearDatabase()">🗑️ Clear Database</button>
+
+    <div id="result"></div>
+
+    <script>
+        const API_URL = 'https://zenzone-production-2f90.up.railway.app';
+        const resultDiv = document.getElementById('result');
+
+        async function seedDatabase() {
+            try {
+                resultDiv.textContent = 'Seeding database...';
+                resultDiv.className = '';
+                
+                const response = await fetch(`${API_URL}/api/wellness/seed`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                const data = await response.json();
+                
+                if (response.ok) {
+                    resultDiv.textContent = JSON.stringify(data, null, 2);
+                    resultDiv.className = 'success';
+                } else {
+                    resultDiv.textContent = JSON.stringify(data, null, 2);
+                    resultDiv.className = 'error';
+                }
+            } catch (error) {
+                resultDiv.textContent = `Error: ${error.message}`;
+                resultDiv.className = 'error';
+            }
+        }
+
+        async function checkResources() {
+            try {
+                resultDiv.textContent = 'Checking resources...';
+                resultDiv.className = '';
+                
+                const response = await fetch(`${API_URL}/api/wellness?page=1&limit=100`);
+                const data = await response.json();
+                
+                resultDiv.textContent = `Total Resources: ${data.total}\nPublished: ${data.resources.length}\n\n` + 
+                    data.resources.map(r => `✓ ${r.title} (${r.category})`).join('\n');
+                resultDiv.className = 'success';
+            } catch (error) {
+                resultDiv.textContent = `Error: ${error.message}`;
+                resultDiv.className = 'error';
+            }
+        }
+
+        async function clearDatabase() {
+            if (!confirm('Are you sure you want to delete ALL wellness resources?')) {
+                return;
+            }
+            
+            try {
+                resultDiv.textContent = 'Clearing database...';
+                resultDiv.className = '';
+                
+                const response = await fetch(`${API_URL}/api/wellness/seed`, {
+                    method: 'DELETE'
+                });
+
+                const data = await response.json();
+                resultDiv.textContent = JSON.stringify(data, null, 2);
+                resultDiv.className = data.deletedCount > 0 ? 'success' : 'error';
+            } catch (error) {
+                resultDiv.textContent = `Error: ${error.message}`;
+                resultDiv.className = 'error';
+            }
+        }
+
+        // Auto-check on load
+        window.addEventListener('load', checkResources);
+    </script>
+</body>
+</html>
