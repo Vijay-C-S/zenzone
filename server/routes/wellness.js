@@ -115,17 +115,16 @@ router.get('/stats/overview', async (req, res) => {
   }
 })
 
-// Initialize comprehensive wellness library (admin only)
-router.post('/init', authenticate, async (req, res) => {
+// Initialize comprehensive wellness library (temporarily public for seeding)
+router.post('/init', async (req, res) => {
   try {
-    // Check if user is admin (implement admin check)
-    // if (!req.user.isAdmin) {
-    //   return res.status(403).json({ message: 'Admin access required' })
-    // }
-
     const existingCount = await WellnessResource.countDocuments()
-    if (existingCount > 10) {
-      return res.json({ message: 'Wellness library already has sufficient resources' })
+    if (existingCount > 0) {
+      return res.json({ 
+        message: 'Wellness library already initialized',
+        existingCount,
+        note: 'Delete existing resources first if you want to reinitialize'
+      })
     }
 
     const comprehensiveResources = [
@@ -619,3 +618,178 @@ router.delete('/:id', authenticate, async (req, res) => {
 })
 
 export default router
+
+// Quick seed endpoint (remove after seeding production)
+router.post('/seed', async (req, res) => {
+  try {
+    const count = await WellnessResource.countDocuments()
+    if (count > 0) {
+      return res.json({ 
+        message: 'Database already has resources', 
+        count,
+        note: 'Use DELETE /api/wellness/seed to clear first'
+      })
+    }
+
+    const resources = [
+      {
+        title: "Self-Compassion and Inner Kindness",
+        description: "Learn to treat yourself with the same kindness you'd offer a good friend. Building resilience and emotional wellbeing through self-compassion practices.",
+        content: "Self-compassion is the practice of treating yourself with the same kindness, concern, and understanding you would offer to a good friend. Research shows that self-compassion is strongly associated with emotional wellbeing, less anxiety and depression, and greater life satisfaction.",
+        category: "mindfulness",
+        type: "article",
+        duration: "15 min read",
+        difficulty: "beginner",
+        tags: ["self-compassion", "mindfulness", "emotional-wellbeing", "meditation"],
+        author: "Dr. Sarah Johnson",
+        imageUrl: "/images/self-compassion.jpg",
+        isPublished: true
+      },
+      {
+        title: "Nature Connection for Mental Health",
+        description: "Discover how spending time in nature can significantly improve your mental health. Simple ways to incorporate outdoor activities into your daily routine.",
+        content: "Scientific research increasingly shows that spending time in nature has profound effects on our mental health and overall wellbeing. From reducing stress and anxiety to improving mood and cognitive function, nature offers a powerful therapeutic tool.",
+        category: "general",
+        type: "article",
+        duration: "12 min read",
+        difficulty: "beginner",
+        tags: ["nature", "stress-relief", "outdoor-activities", "mindfulness"],
+        author: "Michael Green",
+        imageUrl: "/images/nature-therapy.jpg",
+        isPublished: true
+      },
+      {
+        title: "Stress Management in Daily Life",
+        description: "Effective techniques to manage stress in your everyday routine. Learn practical strategies to reduce anxiety and stay calm under pressure.",
+        content: "Chronic stress affects every aspect of our lives – from sleep quality to immune function. Learning to manage stress effectively is crucial for long-term health and happiness.",
+        category: "stress",
+        type: "article",
+        duration: "18 min read",
+        difficulty: "beginner",
+        tags: ["stress-management", "anxiety-relief", "daily-routine", "wellness"],
+        author: "Dr. Lisa Martinez",
+        imageUrl: "/images/stress-management.jpg",
+        isPublished: true
+      },
+      {
+        title: "Mindful Eating for Mental Wellness",
+        description: "Discover how your relationship with food affects your mental health. Practical tips for developing a healthier, more mindful approach to eating.",
+        content: "The connection between what we eat and how we feel is profound. Mindful eating isn't just about nutrition – it's about developing a healthier relationship with food and using meals as opportunities for self-care and stress reduction.",
+        category: "general",
+        type: "article",
+        duration: "20 min read",
+        difficulty: "intermediate",
+        tags: ["mindful-eating", "nutrition", "mental-health", "wellness"],
+        author: "Nutritionist Emma Williams",
+        imageUrl: "/images/mindful-eating.jpg",
+        isPublished: true
+      },
+      {
+        title: "Building Healthy Boundaries",
+        description: "Learn how to set and maintain healthy boundaries in relationships, work, and personal life for better mental health and wellbeing.",
+        content: "Healthy boundaries are essential for mental wellness, healthy relationships, and self-respect. They define where you end and others begin, protecting your time, energy, and emotional wellbeing.",
+        category: "relationships",
+        type: "article",
+        duration: "22 min read",
+        difficulty: "intermediate",
+        tags: ["boundaries", "relationships", "self-care", "communication"],
+        author: "Dr. James Chen",
+        imageUrl: "/images/boundaries.jpg",
+        isPublished: true
+      },
+      {
+        title: "Breathing Exercises for Anxiety",
+        description: "Simple breathing techniques to manage anxiety in the moment. Evidence-based practices you can use anywhere, anytime.",
+        content: "Your breath is the most accessible tool for managing anxiety. These evidence-based breathing techniques can quickly activate your parasympathetic nervous system, triggering the relaxation response.",
+        category: "anxiety",
+        type: "exercise",
+        duration: "15 min practice",
+        difficulty: "beginner",
+        tags: ["breathing", "anxiety", "panic-attacks", "stress-relief", "mindfulness"],
+        author: "Yoga Therapist Rachel Adams",
+        imageUrl: "/images/breathing.jpg",
+        isPublished: true
+      },
+      {
+        title: "Digital Detox: Reclaiming Your Mental Space",
+        description: "Learn how to create healthy boundaries with technology and social media for improved mental health, focus, and wellbeing.",
+        content: "Our always-on digital culture is taking a toll on mental health. Research links excessive screen time to increased anxiety, depression, poor sleep, and decreased attention span. A digital detox isn't about abandoning technology – it's about using it intentionally.",
+        category: "general",
+        type: "article",
+        duration: "25 min read",
+        difficulty: "intermediate",
+        tags: ["digital-detox", "technology", "social-media", "mindfulness", "productivity"],
+        author: "Tech Wellness Coach David Park",
+        imageUrl: "/images/digital-detox.jpg",
+        isPublished: true
+      },
+      {
+        title: "Guided Meditation for Stress Relief",
+        description: "A 10-minute guided meditation session to release tension and find calm. Perfect for beginners and experienced meditators alike.",
+        content: "This 10-minute guided meditation will help you release tension, quiet your mind, and find a sense of peace and calm. Find a comfortable seated or lying position, and let's begin.",
+        category: "mindfulness",
+        type: "audio",
+        duration: "10 minutes",
+        difficulty: "beginner",
+        tags: ["guided-meditation", "stress-relief", "mindfulness", "relaxation", "breathing"],
+        author: "Meditation Teacher Maya Singh",
+        imageUrl: "/images/guided-meditation.jpg",
+        url: "https://example.com/meditation-audio",
+        isPublished: true
+      },
+      {
+        title: "Work-Life Balance Strategies",
+        description: "Practical techniques for creating better work-life balance and preventing burnout in demanding careers and busy lifestyles.",
+        content: "In our always-on culture, work-life balance has become increasingly challenging yet more important than ever. Chronic overwork leads to burnout, health problems, and decreased life satisfaction.",
+        category: "stress",
+        type: "article",
+        duration: "28 min read",
+        difficulty: "intermediate",
+        tags: ["work-life-balance", "burnout-prevention", "boundaries", "career", "wellbeing"],
+        author: "Career Coach Jennifer Liu",
+        imageUrl: "/images/work-life-balance.jpg",
+        isPublished: true
+      },
+      {
+        title: "Managing Depression: Self-Care Strategies",
+        description: "Evidence-based self-care techniques to support your journey through depression. Practical daily actions that can help improve mood and wellbeing.",
+        content: "If you're experiencing depression, know that you're not alone and help is available. While these self-care strategies can support your journey, they're meant to complement professional treatment, not replace it.",
+        category: "depression",
+        type: "article",
+        duration: "30 min read",
+        difficulty: "intermediate",
+        tags: ["depression", "mental-health", "self-care", "coping-strategies", "wellbeing"],
+        author: "Clinical Psychologist Dr. Amanda Foster",
+        imageUrl: "/images/depression-care.jpg",
+        isPublished: true
+      }
+    ]
+
+    await WellnessResource.insertMany(resources)
+    const newCount = await WellnessResource.countDocuments()
+
+    res.json({ 
+      success: true,
+      message: 'Wellness resources seeded successfully!',
+      resourcesAdded: resources.length,
+      totalResources: newCount
+    })
+  } catch (error) {
+    console.error('Seed error:', error)
+    res.status(500).json({ error: error.message })
+  }
+})
+
+// Clear all resources (use with caution!)
+router.delete('/seed', async (req, res) => {
+  try {
+    const result = await WellnessResource.deleteMany({})
+    res.json({ 
+      message: 'All wellness resources deleted',
+      deletedCount: result.deletedCount
+    })
+  } catch (error) {
+    console.error('Delete error:', error)
+    res.status(500).json({ error: error.message })
+  }
+})
