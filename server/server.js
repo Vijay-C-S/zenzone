@@ -119,7 +119,7 @@ if (process.env.NODE_ENV !== 'production') {
 
 // Connect to MongoDB (non-blocking)
 mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/zenzone')
-.then(() => console.log('Connected to MongoDB'))
+.then(() => console.log('✅ Connected to MongoDB - Fresh connection'))
 .catch(err => console.error('MongoDB connection error:', err))
 
 // Don't wait for MongoDB - start server immediately

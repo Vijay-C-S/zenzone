@@ -148,6 +148,9 @@ async function seedWellness() {
     const deleteResult = await WellnessResource.deleteMany({})
     console.log(`🗑️ Deleted ${deleteResult.deletedCount} existing resources`)
 
+    // Debug: Show first resource's imageUrl
+    console.log('📸 First resource imageUrl:', wellnessResources[0].imageUrl)
+
     // Insert new resources
     const insertedResources = await WellnessResource.insertMany(wellnessResources)
     console.log(`✨ Inserted ${insertedResources.length} new wellness resources`)
