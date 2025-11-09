@@ -320,4 +320,10 @@ const seedCrisisResources = async () => {
   }
 }
 
-seedCrisisResources()
+// Export for use in crisis routes
+export { crisisResources }
+
+// Run if executed directly
+if (import.meta.url === `file://${process.argv[1].replace(/\\/g, '/')}`) {
+  seedCrisisResources()
+}

@@ -2,6 +2,7 @@ import express from 'express'
 import { body, validationResult } from 'express-validator'
 import { CrisisResource, CrisisLog } from '../models/CrisisResource.js'
 import { authenticate } from '../middleware/auth.js'
+import { crisisResources } from '../seedCrisisResources.js'
 
 const router = express.Router()
 
@@ -128,6 +129,47 @@ router.get('/categories', async (req, res) => {
   } catch (error) {
     console.error('Error fetching categories:', error)
     res.status(500).json({ message: 'Failed to fetch categories' })
+  }
+})
+
+// Seed crisis resources (public endpoint for production seeding)
+router.post('/seed', async (req, res) => {
+  try {
+    const count = await CrisisResource.countDocuments()
+    if (count > 0) {
+      return res.json({ 
+        message: 'Database already has crisis resources', 
+        count,
+        note: 'Use DELETE /api/crisis/seed to clear first'
+      })
+    }
+    
+    await CrisisResource.insertMany(crisisResources)
+    const newCount = await CrisisResource.countDocuments()
+
+    res.json({ 
+      success: true,
+      message: 'Crisis resources seeded successfully!',
+      resourcesAdded: crisisResources.length,
+      totalResources: newCount
+    })
+  } catch (error) {
+    console.error('Seed error:', error)
+    res.status(500).json({ error: error.message })
+  }
+})
+
+// Clear all crisis resources (use with caution!)
+router.delete('/seed', async (req, res) => {
+  try {
+    const result = await CrisisResource.deleteMany({})
+    res.json({ 
+      message: 'All crisis resources deleted',
+      deletedCount: result.deletedCount
+    })
+  } catch (error) {
+    console.error('Delete error:', error)
+    res.status(500).json({ error: error.message })
   }
 })
 
