@@ -3,6 +3,7 @@ import { Calendar, TrendingUp, Smile, Meh, Frown } from 'lucide-react'
 import { format, startOfMonth, endOfMonth, eachDayOfInterval, isSameDay, isToday, isFuture, startOfDay } from 'date-fns'
 import toast from 'react-hot-toast'
 import API_BASE_URL from '../config/api'
+import { Skeleton, SkeletonCard, SkeletonChart } from '../components/ui/Skeleton'
 
 const MoodTracker = () => {
   const [selectedDate, setSelectedDate] = React.useState(new Date())
@@ -141,6 +142,61 @@ const MoodTracker = () => {
         </p>
       </div>
 
+      {/* Loading State */}
+      {isLoading && Object.keys(moodEntries).length === 0 ? (
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          {/* Calendar Skeleton */}
+          <div className="lg:col-span-2">
+            <div className="card">
+              <div className="flex items-center justify-between mb-6">
+                <Skeleton variant="title" className="w-48" />
+                <div className="flex space-x-2">
+                  <Skeleton variant="button" className="w-24" />
+                  <Skeleton variant="button" className="w-24" />
+                </div>
+              </div>
+              
+              {/* Calendar Grid Skeleton */}
+              <div className="grid grid-cols-7 gap-2 mb-2">
+                {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map(day => (
+                  <div key={day} className="text-center text-xs font-medium text-gray-500 dark:text-gray-400 py-2">
+                    {day}
+                  </div>
+                ))}
+              </div>
+              <div className="grid grid-cols-7 gap-2">
+                {Array.from({ length: 35 }).map((_, i) => (
+                  <Skeleton key={i} className="h-12 w-full" />
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* Mood Selection Skeleton */}
+          <div className="space-y-6">
+            <SkeletonCard lines={2} />
+            
+            {/* Statistics Skeleton */}
+            <div className="card">
+              <Skeleton variant="title" className="mb-4" />
+              <div className="space-y-3">
+                <div className="flex items-center justify-between">
+                  <Skeleton variant="text" className="w-32" />
+                  <Skeleton variant="badge" />
+                </div>
+                <div className="flex items-center justify-between">
+                  <Skeleton variant="text" className="w-32" />
+                  <Skeleton variant="badge" />
+                </div>
+                <div className="flex items-center justify-between">
+                  <Skeleton variant="text" className="w-32" />
+                  <Skeleton variant="badge" />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      ) : (
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         {/* Calendar */}
         <div className="lg:col-span-2">
@@ -298,6 +354,7 @@ const MoodTracker = () => {
           </div>
         </div>
       </div>
+      )}
     </div>
   )
 }

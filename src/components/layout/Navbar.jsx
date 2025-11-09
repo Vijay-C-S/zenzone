@@ -1,6 +1,10 @@
 import React from 'react'
 import { Link, useNavigate, useLocation } from 'react-router-dom'
-import { Moon, Sun, Menu, X, Heart, LogOut, User } from 'lucide-react'
+import { 
+  Moon, Sun, Menu, X, Heart, LogOut, User,
+  LayoutDashboard, Smile, BookOpen, Target, CheckSquare,
+  Brain, MessageCircle, Library, ClipboardList, AlertCircle
+} from 'lucide-react'
 import { useAuthStore } from '../../stores/authStore'
 import { useDarkMode } from '../../hooks/useDarkMode'
 
@@ -18,20 +22,38 @@ const Navbar = () => {
 
   const isActive = (path) => location.pathname === path
 
-  const navLinks = user ? [
-    { path: '/dashboard', label: 'Dashboard' },
-    { path: '/mood', label: 'Mood' },
-    { path: '/journal', label: 'Journal' },
-    { path: '/goals', label: 'Goals' },
-    { path: '/habits', label: 'Habits' },
-    { path: '/meditation', label: 'Meditation' },
-    { path: '/chat', label: 'Chat' },
-    { path: '/wellness', label: 'Wellness' },
-    { path: '/assessment', label: 'Assessment' },
-    { path: '/crisis', label: 'Crisis Support' },
-  ] : [
-    { path: '/crisis', label: 'Crisis Support' }
-  ]
+  const navLinks = user ? {
+    track: [
+      { path: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
+      { path: '/mood', label: 'Mood', icon: Smile },
+      { path: '/journal', label: 'Journal', icon: BookOpen },
+    ],
+    improve: [
+      { path: '/goals', label: 'Goals', icon: Target },
+      { path: '/habits', label: 'Habits', icon: CheckSquare },
+      { path: '/meditation', label: 'Meditation', icon: Brain },
+    ],
+    learn: [
+      { path: '/chat', label: 'AI Chat', icon: MessageCircle },
+      { path: '/wellness', label: 'Wellness', icon: Library },
+      { path: '/assessment', label: 'Assessment', icon: ClipboardList },
+    ],
+    support: [
+      { path: '/crisis', label: 'Crisis Support', icon: AlertCircle },
+    ]
+  } : {
+    public: [
+      { path: '/crisis', label: 'Crisis Support', icon: AlertCircle }
+    ]
+  }
+
+  // Flatten for desktop navigation
+  const flatNavLinks = user ? [
+    ...navLinks.track,
+    ...navLinks.improve,
+    ...navLinks.learn,
+    ...navLinks.support
+  ] : navLinks.public
 
   return (
     <nav className="bg-white dark:bg-gray-800 shadow-sm border-b border-gray-200 dark:border-gray-700 sticky top-0 z-50">
@@ -47,7 +69,7 @@ const Navbar = () => {
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center space-x-8">
-            {navLinks.map((link) => (
+            {flatNavLinks.map((link) => (
               <Link
                 key={link.path}
                 to={link.path}
@@ -127,36 +149,163 @@ const Navbar = () => {
         {/* Mobile menu */}
         {isMenuOpen && (
           <div className="md:hidden py-4 border-t border-gray-200 dark:border-gray-700">
-            <div className="flex flex-col space-y-3">
-              {navLinks.map((link) => (
-                <Link
-                  key={link.path}
-                  to={link.path}
-                  onClick={() => setIsMenuOpen(false)}
-                  className={`text-sm font-medium transition-colors duration-200 ${
-                    isActive(link.path)
-                      ? 'text-zen-600 dark:text-zen-400'
-                      : 'text-gray-600 dark:text-gray-300 hover:text-zen-600 dark:hover:text-zen-400'
-                  }`}
-                >
-                  {link.label}
-                </Link>
-              ))}
-              {!user && (
+            <div className="flex flex-col space-y-1">
+              {user ? (
                 <>
+                  {/* User Info */}
+                  <div className="flex items-center space-x-3 px-3 py-3 bg-gray-50 dark:bg-gray-900 rounded-lg mb-3">
+                    <div className="w-10 h-10 rounded-full bg-zen-100 dark:bg-zen-900 flex items-center justify-center">
+                      <User className="h-5 w-5 text-zen-600 dark:text-zen-400" />
+                    </div>
+                    <div>
+                      <p className="text-sm font-semibold text-gray-900 dark:text-white">{user.name}</p>
+                      <p className="text-xs text-gray-500 dark:text-gray-400">{user.email}</p>
+                    </div>
+                  </div>
+
+                  {/* Track Section */}
+                  <div className="mb-2">
+                    <p className="px-3 py-2 text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                      Track Progress
+                    </p>
+                    {navLinks.track.map((link) => {
+                      const Icon = link.icon
+                      return (
+                        <Link
+                          key={link.path}
+                          to={link.path}
+                          onClick={() => setIsMenuOpen(false)}
+                          className={`flex items-center space-x-3 px-3 py-2.5 rounded-lg transition-colors duration-200 ${
+                            isActive(link.path)
+                              ? 'bg-zen-50 dark:bg-zen-900/30 text-zen-600 dark:text-zen-400'
+                              : 'text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800'
+                          }`}
+                        >
+                          <Icon className="h-5 w-5" />
+                          <span className="text-sm font-medium">{link.label}</span>
+                        </Link>
+                      )
+                    })}
+                  </div>
+
+                  {/* Improve Section */}
+                  <div className="mb-2">
+                    <p className="px-3 py-2 text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                      Improve Wellbeing
+                    </p>
+                    {navLinks.improve.map((link) => {
+                      const Icon = link.icon
+                      return (
+                        <Link
+                          key={link.path}
+                          to={link.path}
+                          onClick={() => setIsMenuOpen(false)}
+                          className={`flex items-center space-x-3 px-3 py-2.5 rounded-lg transition-colors duration-200 ${
+                            isActive(link.path)
+                              ? 'bg-zen-50 dark:bg-zen-900/30 text-zen-600 dark:text-zen-400'
+                              : 'text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800'
+                          }`}
+                        >
+                          <Icon className="h-5 w-5" />
+                          <span className="text-sm font-medium">{link.label}</span>
+                        </Link>
+                      )
+                    })}
+                  </div>
+
+                  {/* Learn Section */}
+                  <div className="mb-2">
+                    <p className="px-3 py-2 text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                      Learn & Connect
+                    </p>
+                    {navLinks.learn.map((link) => {
+                      const Icon = link.icon
+                      return (
+                        <Link
+                          key={link.path}
+                          to={link.path}
+                          onClick={() => setIsMenuOpen(false)}
+                          className={`flex items-center space-x-3 px-3 py-2.5 rounded-lg transition-colors duration-200 ${
+                            isActive(link.path)
+                              ? 'bg-zen-50 dark:bg-zen-900/30 text-zen-600 dark:text-zen-400'
+                              : 'text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800'
+                          }`}
+                        >
+                          <Icon className="h-5 w-5" />
+                          <span className="text-sm font-medium">{link.label}</span>
+                        </Link>
+                      )
+                    })}
+                  </div>
+
+                  {/* Support Section */}
+                  <div className="mb-2">
+                    <p className="px-3 py-2 text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                      Get Support
+                    </p>
+                    {navLinks.support.map((link) => {
+                      const Icon = link.icon
+                      return (
+                        <Link
+                          key={link.path}
+                          to={link.path}
+                          onClick={() => setIsMenuOpen(false)}
+                          className={`flex items-center space-x-3 px-3 py-2.5 rounded-lg transition-colors duration-200 ${
+                            isActive(link.path)
+                              ? 'bg-red-50 dark:bg-red-900/30 text-red-600 dark:text-red-400'
+                              : 'text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800'
+                          }`}
+                        >
+                          <Icon className="h-5 w-5" />
+                          <span className="text-sm font-medium">{link.label}</span>
+                        </Link>
+                      )
+                    })}
+                  </div>
+
+                  {/* Logout Button */}
+                  <button
+                    onClick={() => {
+                      handleLogout()
+                      setIsMenuOpen(false)
+                    }}
+                    className="flex items-center space-x-3 px-3 py-2.5 mt-2 rounded-lg text-gray-600 dark:text-gray-300 hover:bg-red-50 dark:hover:bg-red-900/20 hover:text-red-600 dark:hover:text-red-400 transition-colors duration-200"
+                  >
+                    <LogOut className="h-5 w-5" />
+                    <span className="text-sm font-medium">Logout</span>
+                  </button>
+                </>
+              ) : (
+                <>
+                  {navLinks.public.map((link) => {
+                    const Icon = link.icon
+                    return (
+                      <Link
+                        key={link.path}
+                        to={link.path}
+                        onClick={() => setIsMenuOpen(false)}
+                        className="flex items-center space-x-3 px-3 py-2.5 rounded-lg text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors duration-200"
+                      >
+                        <Icon className="h-5 w-5" />
+                        <span className="text-sm font-medium">{link.label}</span>
+                      </Link>
+                    )
+                  })}
+                  <div className="border-t border-gray-200 dark:border-gray-700 my-3"></div>
                   <Link
                     to="/login"
                     onClick={() => setIsMenuOpen(false)}
-                    className="text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-zen-600 dark:hover:text-zen-400 transition-colors duration-200"
+                    className="flex items-center space-x-3 px-3 py-2.5 rounded-lg text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors duration-200"
                   >
-                    Login
+                    <User className="h-5 w-5" />
+                    <span className="text-sm font-medium">Login</span>
                   </Link>
                   <Link
                     to="/register"
                     onClick={() => setIsMenuOpen(false)}
-                    className="btn-primary text-sm w-fit"
+                    className="flex items-center justify-center space-x-2 mx-3 px-4 py-2.5 bg-zen-600 hover:bg-zen-700 text-white rounded-lg transition-colors duration-200"
                   >
-                    Sign Up
+                    <span className="text-sm font-medium">Sign Up</span>
                   </Link>
                 </>
               )}
