@@ -15,6 +15,8 @@ router.get('/', async (req, res) => {
     if (type) filter.type = type
     if (region) filter.region = { $in: [region, 'global'] }
 
+    console.log('🔍 Crisis route filter:', JSON.stringify(filter))
+    
     const resources = await CrisisResource.find(filter)
       .sort({ 
         priority: -1, 
@@ -23,6 +25,7 @@ router.get('/', async (req, res) => {
       })
       .limit(emergency === 'true' ? 5 : 50)
 
+    console.log(`✅ Found ${resources.length} crisis resources`)
     res.json({ resources })
   } catch (error) {
     console.error('Error fetching crisis resources:', error)
