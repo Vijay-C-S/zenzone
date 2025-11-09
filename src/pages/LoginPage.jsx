@@ -1,8 +1,8 @@
 import React from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { Mail, Lock, Eye, EyeOff } from 'lucide-react'
+import { Mail, Lock, Eye, EyeOff, AlertCircle } from 'lucide-react'
 import { useAuthStore } from '../stores/authStore'
-import toast from 'react-hot-toast'
+import { showSuccess, showError } from '../utils/toast'
 
 const LoginPage = () => {
   const [formData, setFormData] = React.useState({
@@ -10,6 +10,8 @@ const LoginPage = () => {
     password: ''
   })
   const [showPassword, setShowPassword] = React.useState(false)
+  const [errors, setErrors] = React.useState({})
+  const [touched, setTouched] = React.useState({})
   const { login, isLoading, error, clearError } = useAuthStore()
   const navigate = useNavigate()
 
@@ -17,22 +19,86 @@ const LoginPage = () => {
     clearError()
   }, [clearError])
 
+  // Validation rules
+  const validateField = (name, value) => {
+    switch (name) {
+      case 'email':
+        if (!value) return 'Email is required'
+        if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(value)) {
+          return 'Invalid email address'
+        }
+        return ''
+      case 'password':
+        if (!value) return 'Password is required'
+        if (value.length < 6) return 'Password must be at least 6 characters'
+        return ''
+      default:
+        return ''
+    }
+  }
+
+  // Validate all fields
+  const validateForm = () => {
+    const newErrors = {}
+    Object.keys(formData).forEach(key => {
+      const error = validateField(key, formData[key])
+      if (error) newErrors[key] = error
+    })
+    setErrors(newErrors)
+    return Object.keys(newErrors).length === 0
+  }
+
   const handleSubmit = async (e) => {
     e.preventDefault()
+    
+    // Mark all fields as touched
+    setTouched({ email: true, password: true })
+    
+    // Validate form
+    if (!validateForm()) {
+      showError('Please fix the errors in the form')
+      return
+    }
+
     const result = await login(formData.email, formData.password)
     
     if (result.success) {
-      toast.success('Welcome back!')
+      showSuccess('Welcome back!')
       navigate('/dashboard')
     } else {
-      toast.error(result.error || 'Login failed')
+      showError(result.error || 'Login failed')
     }
   }
 
   const handleChange = (e) => {
+    const { name, value } = e.target
     setFormData(prev => ({
       ...prev,
-      [e.target.name]: e.target.value
+      [name]: value
+    }))
+    
+    // Validate on change if field was touched
+    if (touched[name]) {
+      const error = validateField(name, value)
+      setErrors(prev => ({
+        ...prev,
+        [name]: error
+      }))
+    }
+  }
+
+  const handleBlur = (e) => {
+    const { name, value } = e.target
+    setTouched(prev => ({
+      ...prev,
+      [name]: true
+    }))
+    
+    // Validate on blur
+    const error = validateField(name, value)
+    setErrors(prev => ({
+      ...prev,
+      [name]: error
     }))
   }
 
@@ -69,16 +135,35 @@ const LoginPage = () => {
                   required
                   value={formData.email}
                   onChange={handleChange}
-                  className="input-field pl-10"
+                  onBlur={handleBlur}
+                  className={`input-field pl-10 ${
+                    errors.email && touched.email
+                      ? 'border-red-500 focus:ring-red-500 focus:border-red-500'
+                      : ''
+                  }`}
                   placeholder="Enter your email"
                 />
               </div>
+              {errors.email && touched.email && (
+                <div className="flex items-center mt-1 text-sm text-red-600 dark:text-red-400">
+                  <AlertCircle className="h-4 w-4 mr-1" />
+                  {errors.email}
+                </div>
+              )}
             </div>
 
             <div>
-              <label htmlFor="password" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                Password
-              </label>
+              <div className="flex items-center justify-between mb-2">
+                <label htmlFor="password" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                  Password
+                </label>
+                <Link 
+                  to="/forgot-password" 
+                  className="text-sm text-zen-600 hover:text-zen-500 dark:text-zen-400 dark:hover:text-zen-300"
+                >
+                  Forgot password?
+                </Link>
+              </div>
               <div className="relative">
                 <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
                 <input
@@ -88,7 +173,12 @@ const LoginPage = () => {
                   required
                   value={formData.password}
                   onChange={handleChange}
-                  className="input-field pl-10 pr-10"
+                  onBlur={handleBlur}
+                  className={`input-field pl-10 pr-10 ${
+                    errors.password && touched.password
+                      ? 'border-red-500 focus:ring-red-500 focus:border-red-500'
+                      : ''
+                  }`}
                   placeholder="Enter your password"
                 />
                 <button
@@ -99,6 +189,12 @@ const LoginPage = () => {
                   {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
                 </button>
               </div>
+              {errors.password && touched.password && (
+                <div className="flex items-center mt-1 text-sm text-red-600 dark:text-red-400">
+                  <AlertCircle className="h-4 w-4 mr-1" />
+                  {errors.password}
+                </div>
+              )}
             </div>
 
             <button
