@@ -3914,4 +3914,11 @@ const seedEnhancedWellness = async () => {
   }
 }
 
-seedEnhancedWellness()
+// Export for use in wellness routes
+export { comprehensiveWellnessResources }
+
+// Run if executed directly
+if (import.meta.url === `file://${process.argv[1].replace(/\\/g, '/')}`) {
+  seedEnhancedWellness()
+}
+
