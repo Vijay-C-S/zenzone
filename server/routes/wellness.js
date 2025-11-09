@@ -642,7 +642,7 @@ router.post('/seed', async (req, res) => {
         difficulty: "beginner",
         tags: ["self-compassion", "mindfulness", "emotional-wellbeing", "meditation"],
         author: "Dr. Sarah Johnson",
-        imageUrl: "/images/self-compassion.jpg",
+        imageUrl: "https://images.unsplash.com/photo-1499209974431-9dddcece7f88?w=800&h=400&fit=crop",
         isPublished: true
       },
       {
@@ -655,7 +655,7 @@ router.post('/seed', async (req, res) => {
         difficulty: "beginner",
         tags: ["nature", "stress-relief", "outdoor-activities", "mindfulness"],
         author: "Michael Green",
-        imageUrl: "/images/nature-therapy.jpg",
+        imageUrl: "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=800&h=400&fit=crop",
         isPublished: true
       },
       {
@@ -668,7 +668,7 @@ router.post('/seed', async (req, res) => {
         difficulty: "beginner",
         tags: ["stress-management", "anxiety-relief", "daily-routine", "wellness"],
         author: "Dr. Lisa Martinez",
-        imageUrl: "/images/stress-management.jpg",
+        imageUrl: "https://images.unsplash.com/photo-1506126613408-eca07ce68773?w=800&h=400&fit=crop",
         isPublished: true
       },
       {
@@ -681,7 +681,7 @@ router.post('/seed', async (req, res) => {
         difficulty: "intermediate",
         tags: ["mindful-eating", "nutrition", "mental-health", "wellness"],
         author: "Nutritionist Emma Williams",
-        imageUrl: "/images/mindful-eating.jpg",
+        imageUrl: "https://images.unsplash.com/photo-1490645935967-10de6ba17061?w=800&h=400&fit=crop",
         isPublished: true
       },
       {
@@ -694,7 +694,7 @@ router.post('/seed', async (req, res) => {
         difficulty: "intermediate",
         tags: ["boundaries", "relationships", "self-care", "communication"],
         author: "Dr. James Chen",
-        imageUrl: "/images/boundaries.jpg",
+        imageUrl: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=800&h=400&fit=crop",
         isPublished: true
       },
       {
@@ -707,7 +707,7 @@ router.post('/seed', async (req, res) => {
         difficulty: "beginner",
         tags: ["breathing", "anxiety", "panic-attacks", "stress-relief", "mindfulness"],
         author: "Yoga Therapist Rachel Adams",
-        imageUrl: "/images/breathing.jpg",
+        imageUrl: "https://images.unsplash.com/photo-1506126613408-eca07ce68773?w=800&h=400&fit=crop",
         isPublished: true
       },
       {
@@ -720,7 +720,7 @@ router.post('/seed', async (req, res) => {
         difficulty: "intermediate",
         tags: ["digital-detox", "technology", "social-media", "mindfulness", "productivity"],
         author: "Tech Wellness Coach David Park",
-        imageUrl: "/images/digital-detox.jpg",
+        imageUrl: "https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?w=800&h=400&fit=crop",
         isPublished: true
       },
       {
@@ -733,7 +733,7 @@ router.post('/seed', async (req, res) => {
         difficulty: "beginner",
         tags: ["guided-meditation", "stress-relief", "mindfulness", "relaxation", "breathing"],
         author: "Meditation Teacher Maya Singh",
-        imageUrl: "/images/guided-meditation.jpg",
+        imageUrl: "https://images.unsplash.com/photo-1528715471579-d1bcf0ba5e83?w=800&h=400&fit=crop",
         url: "https://example.com/meditation-audio",
         isPublished: true
       },
@@ -747,7 +747,7 @@ router.post('/seed', async (req, res) => {
         difficulty: "intermediate",
         tags: ["work-life-balance", "burnout-prevention", "boundaries", "career", "wellbeing"],
         author: "Career Coach Jennifer Liu",
-        imageUrl: "/images/work-life-balance.jpg",
+        imageUrl: "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=800&h=400&fit=crop",
         isPublished: true
       },
       {
@@ -760,7 +760,7 @@ router.post('/seed', async (req, res) => {
         difficulty: "intermediate",
         tags: ["depression", "mental-health", "self-care", "coping-strategies", "wellbeing"],
         author: "Clinical Psychologist Dr. Amanda Foster",
-        imageUrl: "/images/depression-care.jpg",
+        imageUrl: "https://images.unsplash.com/photo-1506126613408-eca07ce68773?w=800&h=400&fit=crop",
         isPublished: true
       }
     ]
