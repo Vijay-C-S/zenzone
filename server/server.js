@@ -37,6 +37,7 @@ const PORT = process.env.PORT || 3001
 const allowedOrigins = [
   'http://localhost:5173',
   'http://localhost:3000',
+  'null', // Allow local file system (for seed-production.html)
   process.env.FRONTEND_URL ? process.env.FRONTEND_URL.replace(/\/$/, '') : null,
   'https://zenzone-git-master-vijay-cs-projects.vercel.app',
   'https://zenzone.vercel.app',
