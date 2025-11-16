@@ -5,7 +5,7 @@ server/node_modules/
 # Environment Variables
 .env
 .env.local
-.env.production
+# .env.production - committed for Vercel (contains only public API URL)
 server/.env
 server/.env.local
 server/.env.production
