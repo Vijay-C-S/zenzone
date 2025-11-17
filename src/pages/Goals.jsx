@@ -46,7 +46,7 @@ const Goals = () => {
 
   const updateGoalProgress = async (goalId, progress) => {
     try {
-      const response = await fetch(`/api/goals/${goalId}`, {
+      const response = await fetch(`${API_BASE_URL}/api/goals/${goalId}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -72,7 +72,7 @@ const Goals = () => {
 
   const updateGoalStatus = async (goalId, status) => {
     try {
-      const response = await fetch(`/api/goals/${goalId}`, {
+      const response = await fetch(`${API_BASE_URL}/api/goals/${goalId}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
