@@ -1,5 +1,5 @@
 // Service Worker for ZenZone PWA
-const CACHE_NAME = 'zenzone-v1'
+const CACHE_NAME = 'zenzone-v2'
 const urlsToCache = [
   '/',
   '/dashboard',
@@ -27,6 +27,13 @@ self.addEventListener('install', (event) => {
 
 // Fetch event
 self.addEventListener('fetch', (event) => {
+  // Don't cache API authentication requests
+  if (event.request.url.includes('/api/auth') || 
+      event.request.url.includes('/api/') && event.request.method !== 'GET') {
+    event.respondWith(fetch(event.request))
+    return
+  }
+
   event.respondWith(
     caches.match(event.request)
       .then((response) => {
@@ -34,7 +41,10 @@ self.addEventListener('fetch', (event) => {
         if (response) {
           return response
         }
-        return fetch(event.request)
+        return fetch(event.request).catch(() => {
+          // Return offline page if available
+          return caches.match('/offline.html')
+        })
       })
   )
 })
