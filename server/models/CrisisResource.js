@@ -51,8 +51,8 @@ const crisisResourceSchema = new mongoose.Schema({
   languages: [String],
   region: {
     type: String,
-    enum: ['global', 'us', 'canada', 'uk', 'australia', 'other'],
-    default: 'us'
+    enum: ['global', 'us', 'canada', 'uk', 'australia', 'india', 'other'],
+    default: 'india'
   },
   isVerified: {
     type: Boolean,
