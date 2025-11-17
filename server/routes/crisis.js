@@ -9,7 +9,7 @@ const router = express.Router()
 // Get crisis resources
 router.get('/', async (req, res) => {
   try {
-    const { category, type, region = 'us', emergency } = req.query
+    const { category, type, region = 'india', emergency } = req.query
     
     const filter = { isActive: true }
     if (category) filter.category = category
@@ -37,7 +37,7 @@ router.get('/', async (req, res) => {
 // Get emergency resources (high priority, immediate help)
 router.get('/emergency', async (req, res) => {
   try {
-    const { region = 'us' } = req.query
+    const { region = 'india' } = req.query
 
     const emergencyResources = await CrisisResource.find({
       isActive: true,
@@ -84,7 +84,7 @@ router.post('/log', [
 // Search resources
 router.get('/search', async (req, res) => {
   try {
-    const { q, region = 'us' } = req.query
+    const { q, region = 'india' } = req.query
     
     if (!q || q.trim().length < 2) {
       return res.status(400).json({ message: 'Search query must be at least 2 characters' })
