@@ -784,7 +784,64 @@ const GuidedSessionPlayer = ({ session, onComplete, onBack }) => {
   const [currentPhase, setCurrentPhase] = useState('preparation')
   const [sessionId, setSessionId] = useState(null)
   const [currentInstructionIndex, setCurrentInstructionIndex] = useState(0)
+  const [audioEnabled, setAudioEnabled] = useState(true)
+  const [lastSpokenPhase, setLastSpokenPhase] = useState(-1)
   const intervalRef = useRef(null)
+  const speechRef = useRef(null)
+
+  // Text-to-Speech function
+  const speakInstruction = (text) => {
+    if (!audioEnabled || !('speechSynthesis' in window)) return
+
+    // Cancel any ongoing speech
+    window.speechSynthesis.cancel()
+
+    const utterance = new SpeechSynthesisUtterance(text)
+    utterance.rate = 0.85 // Slightly slower, more calming
+    utterance.pitch = 1.0
+    utterance.volume = 0.8
+    
+    // Try to use a calm, soothing voice if available
+    const voices = window.speechSynthesis.getVoices()
+    const preferredVoice = voices.find(voice => 
+      voice.name.includes('Google') || 
+      voice.name.includes('Natural') ||
+      voice.name.includes('Female')
+    )
+    if (preferredVoice) {
+      utterance.voice = preferredVoice
+    }
+
+    speechRef.current = utterance
+    window.speechSynthesis.speak(utterance)
+  }
+
+  // Speak preparation phase when starting
+  useEffect(() => {
+    if (currentPhase === 'preparation' && audioEnabled && session.script?.preparation) {
+      speakInstruction(session.script.preparation)
+    }
+  }, [currentPhase, audioEnabled])
+
+  // Speak instructions when phase changes
+  useEffect(() => {
+    if (isRunning && audioEnabled && session.script?.phases && currentInstructionIndex !== lastSpokenPhase) {
+      const phase = session.script.phases[currentInstructionIndex]
+      if (phase?.instruction) {
+        speakInstruction(phase.instruction)
+        setLastSpokenPhase(currentInstructionIndex)
+      }
+    }
+  }, [currentInstructionIndex, isRunning, audioEnabled])
+
+  // Cleanup speech on unmount
+  useEffect(() => {
+    return () => {
+      if (window.speechSynthesis) {
+        window.speechSynthesis.cancel()
+      }
+    }
+  }, [])
 
   // Create audio context for subtle notification sounds
   const playTransitionSound = () => {
@@ -986,6 +1043,48 @@ const GuidedSessionPlayer = ({ session, onComplete, onBack }) => {
                 </p>
               )}
             </div>
+          </div>
+          
+          {/* Audio Control Toggle */}
+          <div className="flex items-center justify-center gap-2 mt-4">
+            <button
+              onClick={() => {
+                setAudioEnabled(!audioEnabled)
+                if (!audioEnabled) {
+                  toast.success('🔊 Audio guidance enabled')
+                } else {
+                  window.speechSynthesis.cancel()
+                  toast.success('🔇 Audio guidance disabled')
+                }
+              }}
+              className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-colors ${
+                audioEnabled 
+                  ? 'bg-green-100 dark:bg-green-900 text-green-700 dark:text-green-300 hover:bg-green-200 dark:hover:bg-green-800' 
+                  : 'bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-600'
+              }`}
+              title={audioEnabled ? 'Disable audio guidance' : 'Enable audio guidance'}
+            >
+              {audioEnabled ? (
+                <>
+                  <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M9.383 3.076A1 1 0 0110 4v12a1 1 0 01-1.707.707L4.586 13H2a1 1 0 01-1-1V8a1 1 0 011-1h2.586l3.707-3.707a1 1 0 011.09-.217zM14.657 2.929a1 1 0 011.414 0A9.972 9.972 0 0119 10a9.972 9.972 0 01-2.929 7.071 1 1 0 01-1.414-1.414A7.971 7.971 0 0017 10c0-2.21-.894-4.208-2.343-5.657a1 1 0 010-1.414zm-2.829 2.828a1 1 0 011.415 0A5.983 5.983 0 0115 10a5.984 5.984 0 01-1.757 4.243 1 1 0 01-1.415-1.415A3.984 3.984 0 0013 10a3.983 3.983 0 00-1.172-2.828 1 1 0 010-1.415z" clipRule="evenodd" />
+                  </svg>
+                  <span className="text-sm font-medium">Audio ON</span>
+                </>
+              ) : (
+                <>
+                  <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M9.383 3.076A1 1 0 0110 4v12a1 1 0 01-1.707.707L4.586 13H2a1 1 0 01-1-1V8a1 1 0 011-1h2.586l3.707-3.707a1 1 0 011.09-.217zM12.293 7.293a1 1 0 011.414 0L15 8.586l1.293-1.293a1 1 0 111.414 1.414L16.414 10l1.293 1.293a1 1 0 01-1.414 1.414L15 11.414l-1.293 1.293a1 1 0 01-1.414-1.414L13.586 10l-1.293-1.293a1 1 0 010-1.414z" clipRule="evenodd" />
+                  </svg>
+                  <span className="text-sm font-medium">Audio OFF</span>
+                </>
+              )}
+            </button>
+            {audioEnabled && (
+              <span className="text-xs text-gray-500 dark:text-gray-400">
+                🎧 Listen to guided meditation
+              </span>
+            )}
           </div>
         </div>
 
